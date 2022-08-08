@@ -11,7 +11,7 @@ jobs:
       - name: Deploy backend
         uses: appleboy/ssh-action@master
         with:
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          key: ${{ secrets.PRIVATE_KEY }}
           known_hosts: 192.168.0.228 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBDIJvWlWkYP/WHsZOf9Ty02/bx6hTYBDi5iHGAwVbfpBi4zgQc35kDhu2kLJl8H7gMYQCynURCaR+DAc4UnFPhc=
 
           username: mpatil
