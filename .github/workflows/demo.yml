@@ -1,0 +1,17 @@
+name: deploy-to-dev-droplet
+on:
+  workflow_dispatch:
+ 
+jobs:
+  deploy-backend:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Deploy backend
+        uses: appleboy/ssh-action@master
+        with:
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          host: ${{ secrets.HOST}}
+          username: ${{ secrets.USERNAME }}
+          script: |
+            scp C:\Users\MangeshPatil\Desktop\Mangesh\demo /
+            
