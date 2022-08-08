@@ -16,5 +16,5 @@ jobs:
 
           username: mpatil
           script: |
-            scp C:\Users\MangeshPatil\Desktop\Mangesh\* /home/mpatil/new/
+             ls -ls >> result.txt
             
