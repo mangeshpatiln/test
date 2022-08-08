@@ -11,8 +11,8 @@ jobs:
       - name: ssh connection checking
         uses: appleboy/ssh-action@master 
         with: 
-          host: SSHINDE-LAPTOP1
-          username: MangeshPatil
+          host: inmumspsp-d004
+          username: Linux
           key: ${{secrets.PRIVATE_KEY}}
           passphrase: Maxparron@123 # "passphrase"
           port: 22
