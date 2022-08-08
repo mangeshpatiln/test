@@ -1,3 +1,5 @@
+ssh-keygen -m PEM -t rsa -b 4096 -C "github-secret"
+
 name: deploy-to-dev-droplet
 on:
   workflow_dispatch:
@@ -10,8 +12,9 @@ jobs:
         uses: appleboy/ssh-action@master
         with:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          host: ${{ secrets.HOST}}
-          username: ${{ secrets.USERNAME }}
+          known_hosts: 192.168.0.228 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBDIJvWlWkYP/WHsZOf9Ty02/bx6hTYBDi5iHGAwVbfpBi4zgQc35kDhu2kLJl8H7gMYQCynURCaR+DAc4UnFPhc=
+
+          username: mpatil
           script: |
-            scp C:\Users\MangeshPatil\Desktop\Mangesh\demo /
+            scp C:\Users\MangeshPatil\Desktop\Mangesh\* /home/mpatil/new/
             
