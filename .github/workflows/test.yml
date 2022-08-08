@@ -14,7 +14,7 @@ jobs:
           host: inmumspsp-d004
           username: mpatil
           password: Maxparron@123
-          key: ${{secrets.PRIVATE_KEY}}
+      #   key: ${{secrets.PRIVATE_KEY}}
           passphrase: Maxparron@123 # "passphrase"
           port: 22
           source: C:\Users\MangeshPatil\Desktop\demo.txt
