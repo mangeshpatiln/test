@@ -9,13 +9,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: ssh connection checking
-        uses: appleboy/scp-action@master 
+        uses: appleboy/scp-action@v0.0.10
         with: 
-          host: inmumspsp-d004
+          host: mpatil@192.168.0.228
           username: mpatil
           password: Maxparron@123
       #   key: ${{secrets.PRIVATE_KEY}}
-          passphrase: Maxparron@123 # "passphrase"
+      #   passphrase: Maxparron@123 # "passphrase"
           port: 22
-          source: "Desktop/demo.txt"
+          source: C:\Users\MangeshPatil\Desktop\Mangesh\demo.txt
           target: "/home/mpatil/new"
