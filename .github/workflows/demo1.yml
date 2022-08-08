@@ -1,0 +1,24 @@
+
+
+name: CI
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Deploy backend
+      uses: ilCollez/ssh-scp-deploy@v1.1.0
+      with:
+        host: ${{ secrets.SSH_HOST }} # "example.com"
+        port: ${{ secrets.SSH_PORT }} # 22
+        username: ${{ secrets.SSH_USER }} # "user"
+        password: ${{ secrets.SSH_PASSWORD }} # "password"
+        files: |
+          *.json
+          public
+          dist
+          lib/**/*.js
+        remote-path: "/var/www/html"
+        clean: true
