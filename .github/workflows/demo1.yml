@@ -11,14 +11,11 @@ jobs:
     - name: Deploy backend
       uses: ilCollez/ssh-scp-deploy@v1.1.0
       with:
-        host: ${{ secrets.SSH_HOST }} # "example.com"
+        host: ${{ secrets.HOST }} # "example.com"
         port: ${{ secrets.SSH_PORT }} # 22
-        username: ${{ secrets.SSH_USER }} # "user"
-        password: ${{ secrets.SSH_PASSWORD }} # "password"
+        username: ${{ secrets.USERNAME }} # "user"
+        password: ${{ secrets.PASSWORD }} # "password"
         files: |
-          *.json
-          public
-          dist
-          lib/**/*.js
-        remote-path: "/var/www/html"
+          demo*
+        remote-path: "/"
         clean: true
