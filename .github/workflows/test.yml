@@ -1,0 +1,19 @@
+
+name: deployment
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: ssh connection checking
+        uses: appleboy/ssh-action@master 
+        with: 
+          host: SSHINDE-LAPTOP1
+          username: MangeshPatil
+          key: ${{secrets.}}
+          port: 22
+          script: |
+           java -version
