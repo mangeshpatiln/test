@@ -17,5 +17,5 @@ jobs:
       #   key: ${{secrets.PRIVATE_KEY}}
       #   passphrase: Maxparron@123 # "passphrase"
           port: 22
-          source: C:\Users\MangeshPatil\Desktop\Mangesh\demo.txt
-          target: "/home/mpatil/new"
+          source: Mangesh\*
+          target: .
