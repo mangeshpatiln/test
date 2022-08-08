@@ -16,6 +16,6 @@ jobs:
         username: ${{ secrets.USERNAME }} # "user"
         password: ${{ secrets.PASSWORD }} # "password"
         files: |
-          demo*
-        remote-path: "/"
+          demo.txt
+        remote-path: "/home/mpatil/new/demo.txt"
         clean: true
