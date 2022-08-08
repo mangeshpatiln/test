@@ -9,12 +9,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: ssh connection checking
-        uses: appleboy/ssh-action@master 
+        uses: appleboy/scp-action@master 
         with: 
           host: inmumspsp-d004
-          username: Linux
+          username: mpatil
+          password: Maxparron@123
           key: ${{secrets.PRIVATE_KEY}}
           passphrase: Maxparron@123 # "passphrase"
           port: 22
-          script: |
-           java -version
+          source: C:\Users\MangeshPatil\Desktop\demo.txt
+          target: /home/mpatil/new
