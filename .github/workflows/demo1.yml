@@ -8,6 +8,12 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@v2
+
+    - uses: actions/download-artifact@v3
+      with:
+        name: demo.txt
+        path: C:\Users\MangeshPatil\
     - name: Deploy backend
       uses: ilCollez/ssh-scp-deploy@v1.1.0
       with:
@@ -16,6 +22,6 @@ jobs:
         username: ${{ secrets.USERNAME }} # "user"
         password: ${{ secrets.PASSWORD }} # "password"
         files: |
-          demo.txt
+          C:\Users\MangeshPatil\demo.txt
         remote-path: "/home/mpatil/new/demo.txt"
         clean: true
