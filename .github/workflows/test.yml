@@ -13,7 +13,7 @@ jobs:
         with: 
           host: SSHINDE-LAPTOP1
           username: MangeshPatil
-          key: ${{secrets.SSH_PRIVATE_KRY}}
+          key: ${{secrets.PRIVATE_KEY}}
           port: 22
           script: |
            java -version
