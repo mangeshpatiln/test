@@ -18,4 +18,4 @@ jobs:
       #   passphrase: Maxparron@123 # "passphrase"
           port: 22
           source: Mangesh\*
-          target: .
+          target: "/home/mpatil/new"
