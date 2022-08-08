@@ -13,7 +13,7 @@ jobs:
         with:
           key: ${{ secrets.PRIVATE_KEY }}
           port: 22
-          known_hosts: 192.168.0.228 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBDIJvWlWkYP/WHsZOf9Ty02/bx6hTYBDi5iHGAwVbfpBi4zgQc35kDhu2kLJl8H7gMYQCynURCaR+DAc4UnFPhc=
+        #  known_hosts: 192.168.0.228 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBDIJvWlWkYP/WHsZOf9Ty02/bx6hTYBDi5iHGAwVbfpBi4zgQc35kDhu2kLJl8H7gMYQCynURCaR+DAc4UnFPhc=
 
           username: mpatil
           script: |
