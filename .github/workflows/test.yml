@@ -17,5 +17,5 @@ jobs:
       #   key: ${{secrets.PRIVATE_KEY}}
           passphrase: Maxparron@123 # "passphrase"
           port: 22
-         #source: C:\Users\MangeshPatil\Desktop\demo.txt
-         #target: /home/mpatil/new
+          source: "Desktop/demo.txt"
+          target: "/home/mpatil/new"
