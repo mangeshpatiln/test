@@ -17,5 +17,14 @@ jobs:
       run: |
          whoami
          pwd
-         ssh mpatil@192.168.0.228 ls -la >> done.txt
+    - name: Deploy backend
+      uses: appleboy/ssh-action@master
+      with:
+          key: ${{ secrets.PRIVATE_KEY }}
+          host: ${{ secrets.HOST}}
+          username: mpatil
+          port: 22
+          script: |
+             cd /home/mpatil/new/
+             touch done.txt
 
