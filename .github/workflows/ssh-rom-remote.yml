@@ -16,3 +16,5 @@ jobs:
     - name: Execute 
       run: |
          whoami
+         cd /home/maptil/new/
+         touch done.txt
