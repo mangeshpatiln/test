@@ -13,5 +13,5 @@ jobs:
         host: 192.168.0.228
         username: mpatil
         password: mp@123DataSeer$
-        port: 22
+        app_port: 22
         script: whoami
