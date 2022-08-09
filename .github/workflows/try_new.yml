@@ -1,0 +1,33 @@
+name: deploy
+on:
+  
+    workflow_dispatch:
+    
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      
+
+      - name: Install SSH Key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.PRIVATE_KEY }}
+          known_hosts: unnecessary
+
+      - name: Adding Known Hosts
+        run: ssh-keyscan -p 22 -H 192.168.0.228 >> ~/.ssh/known_hosts
+
+      - name: Deploy with rsync
+        run: rsync -avz -e "ssh -p 22" ./home/mpatil/ mpatil@192.168.0.228:.
+
+      - name: check ssh to Server
+        uses: appleboy/ssh-action@master
+        with:
+          host: 192.168.0.228
+          username: mpatil
+          key: ${{ secrets.PRIVATE_KEY }}
+          port: 22
+          script: |
+            whoami
