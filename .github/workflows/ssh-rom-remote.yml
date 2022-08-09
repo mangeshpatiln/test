@@ -17,4 +17,5 @@ jobs:
       run: |
          whoami
          pwd
-         ls -la >> done.txt
+         ssh mpatil@192.168.0.228 ls -la >> done.txt
+
