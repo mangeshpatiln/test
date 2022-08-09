@@ -10,7 +10,7 @@ jobs:
     - name: executing remote ssh commands using password
       uses: appleboy/ssh-action@master
       with:
-        host: test.datsseers.in
+        host: 192.168.0.228
         username: mpatil
         key: ${{ secrets.PRIVATE_KEY }}
         port: 22
