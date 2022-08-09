@@ -12,9 +12,10 @@ jobs:
         uses: garygrossgarten/github-action-ssh@release
         with:
           command: ls -a
-          host: test.dataseers.in
-          username: mpatil
-          password: mp@123DataSeer$
-          privateKey: ${{ secrets.PRIVATE_KEY}}
+          host: 192.168.0.20
+          username: slondhe
+          password: 0707
+        # privateKey: ${{ secrets.PRIVATE_KEY}}
+          port: 22
         env:
           CI: true
