@@ -13,7 +13,7 @@ jobs:
          MESSAGE: hello world
        with:
          key: mp@123DataSeer$
-         host: test.dataseers.in
+         host: 192.168.0.228
          port: 22
          user: mpatil
     # runs this on remove server
