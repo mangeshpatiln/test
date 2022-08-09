@@ -12,9 +12,9 @@ jobs:
         uses: garygrossgarten/github-action-ssh@release
         with:
           command: ls -a
-          host: 192.168.0.20
-          username: slondhe
-          password: 0707
+          host: 192.168.0.228
+          username: mpatil
+          password: mp@123DataSeer$
         # privateKey: ${{ secrets.PRIVATE_KEY}}
           port: 22
         env:
