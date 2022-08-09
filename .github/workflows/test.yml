@@ -15,7 +15,7 @@ jobs:
          
          host: 192.168.0.228
          port: 22
-         user: mpatil
+         username: mpatil
          password: mp@123DataSeer$
 
     # runs this on remove server
