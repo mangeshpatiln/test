@@ -9,10 +9,10 @@ jobs:
       - name: Create SSH key
         run: |
           mkdir -p ~/.ssh/
-          echo "$SSH_PRIVATE_KEY" > ../private.key
-          sudo chmod 600 ../private.key
-          echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
-          ssh -i $SSH_KEY_PATH mpatil@192.168.0.228
+          ls -la
+        #  echo "$SSH_PRIVATE_KEY" > ../private.key
+        #  sudo chmod 600 ../private.key
+        #  echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
         shell: bash
         env:
           SSH_PRIVATE_KEY: ${{secrets.SSH_PRIVATE_KEY}}
