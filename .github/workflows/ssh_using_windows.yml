@@ -1,0 +1,21 @@
+
+name: ssh using windows
+
+on:
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+    - name: ssh through windows
+      uses: appleboy/ssh-scp-deploy@v1.1.0
+      with:
+       host: 192.168.0.228 # "example.com"
+       port: 22 # 22
+       username: mpatil # "user"
+       password: mp@123DataSeer$ # "password"
+       run: |
+         cd /home/mpatil/new/
+         ls -la >> done.txt
+    
+       clean: true
