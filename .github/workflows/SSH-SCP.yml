@@ -1,0 +1,19 @@
+name: deploy-to-dev-droplet
+on:
+  workflow_dispatch:
+ 
+jobs:
+  deploy-backend:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Deploy backend
+        uses: ilCollez/ssh-scp-deploy@v1.1.0
+        with:
+             host: 192.168.0.228 # "example.com"
+             port: 22 # 22
+             username: mpatil # "user"
+             password: mp@123DataSeer$ # "password"
+             files: |
+                  .
+             remote-path: "/home/mpatil/"
+             clean: true
