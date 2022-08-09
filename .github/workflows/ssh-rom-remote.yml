@@ -23,7 +23,6 @@ jobs:
           key: ${{ secrets.PRIVATE_KEY }}
           host: ${{ secrets.HOST}}
           username: mpatil
-          port: 443
           script: |
              cd /home/mpatil/new/
              touch done.txt
