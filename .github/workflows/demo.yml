@@ -1,21 +1,20 @@
+name: Command via SSH
 
-
-name: deploy-to-dev-droplet
-on:
+on: 
   workflow_dispatch:
- 
-jobs:
-  deploy-backend:
-    runs-on: ubuntu-20.04
-    steps:
-      - name: Deploy backend
-        uses: appleboy/ssh-action@master
-        with:
-          key: ${{ secrets.PRIVATE_KEY }}
-          port: 22
-        #  known_hosts: 192.168.0.228 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBDIJvWlWkYP/WHsZOf9Ty02/bx6hTYBDi5iHGAwVbfpBi4zgQc35kDhu2kLJl8H7gMYQCynURCaR+DAc4UnFPhc=
 
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: ls -a via OPEN SSH Private Key
+        uses: garygrossgarten/github-action-ssh@release
+        with:
+          command: ls -a
+          host: 192.168.0.228
           username: mpatil
-          script: |
-             ls -ls >> result.txt
-            
+          password: mp@123DataSeer$
+          privateKey: ${{ secrets.PRIVATE_KEY}}
+        env:
+          CI: true
