@@ -17,9 +17,12 @@ jobs:
       run: |
          whoami
          pwd
-    - name: Deploy backend
+    - name: Deploy 
       uses: appleboy/ssh-action@master
       with:
+          port: 22
+          sycc: false 
+          timeout: 30s
           key: ${{ secrets.PRIVATE_KEY }}
           host: ${{ secrets.HOST}}
           username: mpatil
