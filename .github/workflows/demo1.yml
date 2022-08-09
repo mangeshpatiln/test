@@ -1,22 +1,17 @@
-
-
-name: CI
-on:
-  workflow_dispatch:
-
+name: remote ssh command
+on: 
+ workflow_dispatch:
 jobs:
+
   build:
+    name: Build
     runs-on: ubuntu-latest
     steps:
- 
-    - name: Deploy backend
-      uses: ilCollez/ssh-scp-deploy@v1.1.0
+    - name: executing remote ssh commands using password
+      uses: appleboy/ssh-action@master
       with:
-        host: ${{ secrets.HOST }} # "example.com"
-        port: ${{ secrets.SSH_PORT }} # 22
-        username: ${{ secrets.USER_NAME }} # "user"
-        password: ${{ secrets.PASSWORD }} # "password"
-        files: |
-          C:\Users\MangeshPatil\Desktop\demo.txt
-        remote-path: "/home/mpatil/new/demo.txt"
-        clean: true
+        host: test.datsseers.in
+        username: mpatil
+        key: ${{ secrets.PRIVATE_KEY }}
+        port: 22
+        script: whoami
