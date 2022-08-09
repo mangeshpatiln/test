@@ -10,7 +10,7 @@ jobs:
     - name: executing remote ssh commands using password
       uses: appleboy/ssh-action@master
       with:
-        host: 192.168.0.228
+        host: test.dataseers.in
         username: mpatil
         password: mp@123DataSeer$
         port: 22
