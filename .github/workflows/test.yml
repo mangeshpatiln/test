@@ -12,10 +12,12 @@ jobs:
          HELLO: cool
          MESSAGE: hello world
        with:
-         key: mp@123DataSeer$
+         
          host: 192.168.0.228
          port: 22
          user: mpatil
+         password: mp@123DataSeer$
+
     # runs this on remove server
          ssh_before: |
            echo $HELLO
