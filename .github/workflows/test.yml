@@ -15,8 +15,8 @@ jobs:
          
          host: 192.168.0.228
          port: 22
-         username: mpatil
-         password: mp@123DataSeer$
+         user: mpatil
+         key: ${{ secrets.PRIVATE_KEY }}
 
     # runs this on remove server
          ssh_before: |
