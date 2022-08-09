@@ -21,7 +21,7 @@ jobs:
          host: test.dataseers.in
          port: 22
          user: mpatil
-         key: "~/.ssh/id_rsa"
+         key: "/home/runner/.ssh/id_rsa"
 
     # runs this on remove server
          ssh_before: |
