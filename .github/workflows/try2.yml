@@ -12,6 +12,6 @@ jobs:
           key: ${{ secrets.PRIVATE_KEY }}
           host: test.dataseers.in
           username: mpatil
-          port: 22
+          port: 443
           script: |
             ls -la
