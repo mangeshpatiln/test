@@ -15,7 +15,7 @@ jobs:
         host: test.dataseers.in
         username: mpatil
         password: mp@123DataSeer$
-        port: 22
+        port: 443
         script: |
              whoami
              cd /home/mpatil/new
