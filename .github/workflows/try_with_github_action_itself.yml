@@ -13,5 +13,5 @@ jobs:
         known_hosts: $ { { secrets.KNOWN_HOSTS } }
 
     - name: Execute test Script
-      run: ssh mpatil@192.168.0.228 ls -ls >> /home/mpatil/new/demo.txt
+      run: ssh mpatil@192.168.0.228 
 
