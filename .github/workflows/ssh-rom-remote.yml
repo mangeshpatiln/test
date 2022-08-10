@@ -7,26 +7,27 @@ jobs:
   deploy:
     runs-on: ubuntu-18.04 
     steps:   
-    - name: Install SSH Key
-      uses: shimataro/ssh-key-action@v2.1.0
-      with:
-        key: $ { { secrets.PRIVATE_KEY } }
-        known_hosts: $ { { secrets.HOST } }
+  #  - name: Install SSH Key
+   #   uses: shimataro/ssh-key-action@v2.1.0
+    #  with:
+     #   key: $ { { secrets.PRIVATE_KEY } }
+      #  known_hosts: $ { { secrets.HOST } }
 
     - name: Execute 
       run: |
          whoami
          pwd
-    - name: Deploy 
-      uses: appleboy/ssh-action@master
-      with:
-          port: 22
-          sycc: false 
-          timeout: 30s
-          key: ${{ secrets.PRIVATE_KEY }}
-          host: ${{ secrets.HOST}}
-          username: mpatil
-          script: |
-             cd /home/mpatil/new/
-             touch done.txt
+         ssh mpatil@test.dataseers.in
+    #- name: Deploy 
+     # uses: appleboy/ssh-action@master
+      #with:
+       #   port: 22
+     #     sycc: false 
+      #    timeout: 30s
+       #   key: ${{ secrets.PRIVATE_KEY }}
+        #  host: ${{ secrets.HOST}}
+       #   username: mpatil
+        #  script: |
+         #    cd /home/mpatil/new/
+          #   touch done.txt
 
