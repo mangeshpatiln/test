@@ -9,7 +9,7 @@ jobs:
      - name: Copy single file to remote
        uses: garygrossgarten/github-action-scp@release
        with:
-          local: test/demo.txt
+          local: /mangeshpatiln/test/blob/main/demo.txt
           remote: /home/mpatil/new/demo.txt
           host: test.dataseers.in
           username: mpatil
