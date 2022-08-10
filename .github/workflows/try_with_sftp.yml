@@ -1,0 +1,20 @@
+name: TRY WITH SFTP
+on: 
+   workflow_dispatch:
+jobs:
+  # Deploy Process
+  deploy:
+    runs-on: ubuntu-18.04 
+    steps:   
+    - name: deploy file to server
+      uses: wlixcc/SFTP-Deploy-Action@v1.2.4
+      with:
+            username: 'mpatil'
+            server: '192.168.0.228'
+            ssh_private_key: ${{ secrets.PRIVATE_KEY }}
+            local_path: 'https://github.com/mangeshpatiln/test/blob/main/demo.txt'
+            remote_path: '/home/reports/dataseers/'
+            sftpArgs: '-o ConnectTimeout=5'  
+
+
+
