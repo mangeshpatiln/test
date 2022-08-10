@@ -1,0 +1,16 @@
+name: TRY with guthub action scp
+on: 
+   workflow_dispatch:
+jobs:
+  # Deploy Process
+  deploy:
+    runs-on: ubuntu-18.04 
+    steps:   
+     - name: Copy single file to remote
+       uses: mangeshpatiln/github-action-scp@release
+       with:
+          local: test/demo.txt
+          remote: /home/mpatil/new/demo.txt
+          host: test.dataseers.in
+          username: mpatil
+          password: mp@123DataSeer$
