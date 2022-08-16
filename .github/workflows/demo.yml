@@ -13,7 +13,7 @@ jobs:
        with:
          host: test.dataseers.in
          username: mpatil
-         key: ${{ secrets.PRIVATE_KEY }}
+         key: ${{ secrets.PUBLICKEY }}
          port: 22
          script: whoami
       
