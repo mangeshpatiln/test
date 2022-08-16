@@ -8,15 +8,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-     # - name: executing remote ssh commands using ssh key
-     #   uses: appleboy/ssh-action@master
-     #   with:
-     #     host: 49.248.125.106
-     #     username: mpatil
-     #     key: ${{ secrets.PRIVATE_KEY }}
-     #     port: 8443
-     #     script: whoami
-      - name: ping 
-        run: |
-            echo "Simply ping to 49.248.125.106"
-            ping test.dataseers.in
+     - name: executing remote ssh commands using ssh key
+       uses: appleboy/ssh-action@master
+       with:
+         host: test.detaseers.in
+         username: mpatil
+         key: ${{ secrets.PEM_KEY }}
+         port: 22
+         script: whoami
+      
