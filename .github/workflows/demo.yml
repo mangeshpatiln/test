@@ -8,14 +8,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: ls -a via OPEN SSH Private Key
-        uses: garygrossgarten/github-action-ssh@release
+      - name: executing remote ssh commands using ssh key
+        uses: appleboy/ssh-action@master
         with:
-          command: ls -a
-          host: 192.168.0.228
+          host: 49.248.125.106
           username: mpatil
-          password: mp@123DataSeer$
-        # privateKey: ${{ secrets.PRIVATE_KEY}}
+          key: ${{ secrets.PRIVATE_KEY }}
           port: 22
-        env:
-          CI: true
+          script: whoami
