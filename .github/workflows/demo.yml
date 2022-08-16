@@ -19,4 +19,4 @@ jobs:
       - name: ping 
         run: |
             echo "Simply ping to 49.248.125.106"
-            ping 49.248.125.106
+            ping test.dataseers.in
