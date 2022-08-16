@@ -11,7 +11,7 @@ jobs:
       - name: executing remote ssh commands using ssh key
         uses: appleboy/ssh-action@master
         with:
-          host: 49.248.125.106
+          host: test.dataseers.in
           username: mpatil
           key: ${{ secrets.PRIVATE_KEY }}
           port: 22
