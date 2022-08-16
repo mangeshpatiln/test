@@ -1,4 +1,4 @@
-name: Command via SSH
+name: email notification
 
 on: 
   workflow_dispatch:
