@@ -13,11 +13,11 @@ jobs:
       uses: dawidd6/action-send-mail@v2
       with:
                    # mail server settings
-        server_address: smtp.365.com
+        server_address: smtp.gmail.com
         server_port: 465
               # user credentials
-        username: mpatil@dataseers.in
-        password: Maxparron@123
+        username: er.patilmangesh@gmail.com
+        password: 9561356157
                   # email subject
         subject: ${{ github.job }} job of ${{ github.repository }} has ${{ job.status }}
                 # email body as text
