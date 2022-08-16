@@ -8,7 +8,7 @@ jobs:
     name: A job to ping
     runs-on: ubuntu-latest
     env:
-      URL: http://test.datasets.in/
+      URL: 49.248.125.106
       METHOD: GET  # the method used to make the request. It is GET by default
     steps:
       - id: ping
