@@ -1,17 +1,28 @@
-name: demo1
-on: 
- workflow_dispatch:
-jobs:
+name: Command via SSH
 
+on: 
+  workflow_dispatch:
+
+jobs:
   build:
-    name: Build
     runs-on: ubuntu-latest
+    
     steps:
-    - name: executing remote ssh commands using password
-      uses: appleboy/ssh-action@master
+    - name: Send mail
+      if: always()
+      uses: dawidd6/action-send-mail@v2
       with:
-        host: 192.168.0.228
-        username: mpatil
-        key: ${{ secrets.PRIVATE_KEY }}
-        port: 22
-        script: whoami
+                   # mail server settings
+        server_address: smtp.365.com
+        server_port: 465
+              # user credentials
+        username: mpatil@dataseers.in
+        password: Maxparron@123
+                  # email subject
+        subject: ${{ github.job }} job of ${{ github.repository }} has ${{ job.status }}
+                # email body as text
+        body: ${{ github.job }} job in worflow ${{ github.workflow }} of ${{ github.repository }} has ${{ job.status }}
+                 # comma-separated string, send email to
+        to: slondhe@dataseers.in
+                 # from email name
+        from: Mangesh Patil
