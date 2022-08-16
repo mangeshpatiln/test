@@ -14,6 +14,6 @@ jobs:
          host: test.dataseers.in
          username: mpatil
          key: ${{ secrets.PRIVATE_KEY }}
-         port: 22
+         port: 3000
          script: whoami
       
