@@ -1,4 +1,4 @@
-name: Command via SSH
+name: upload artifact
 
 on: 
   workflow_dispatch:
