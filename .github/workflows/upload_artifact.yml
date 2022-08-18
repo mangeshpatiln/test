@@ -1,0 +1,16 @@
+name: Command via SSH
+
+on: 
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+     - name: create a file 
+       run: touch my_file.txt
+     - name: 'Upload Artifact'
+       uses: actions/upload-artifact@v3
+       with:
+        name: my-artifact
+        path: my_file.txt
