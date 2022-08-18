@@ -7,16 +7,5 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-    - uses: LuisEnMarroquin/setup-ssh-action@v2.0.0
-      with:
-        SSHKEY: ${{ secrets.PRIVATE_KEY }} # ----- BEGIN RSA PRIVATE KEY----- ...
-    - run: ssh -T git@github.com || true
-    
-    - uses: LuisEnMarroquin/setup-ssh-action@v2.0.0
-      with:
-        ORIGIN: 192.168.0.228 # example.com || 8.8.8.8
-        SSHKEY: ${{ secrets.PRIVATE_KEY }} # ----- BEGIN RSA PRIVATE KEY----- ...
-        NAME: production
-        PORT: 22 # 3000
-        USER: mpatil # admin
-    - run: ssh production ls --help
+     - name:  get run-id
+       run: echo " ${{ github.run_id}}"
