@@ -20,12 +20,7 @@ jobs:
         name: my-artifact
         path: my_file.txt
 
-name: upload artifact
-
-on: 
- workflow_dispatch:
-
-jobs:   
+ 
   delete:
     runs-on: ubuntu-latest
     #needs: build
