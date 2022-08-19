@@ -2,7 +2,7 @@ name: upload artifact
 
 on: 
  schedule:
-  - cron: '*/5 * * * *'
+ # - cron: '*/5 * * * *'
 
 jobs:
   delete:
