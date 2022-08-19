@@ -20,14 +20,11 @@ jobs:
         name: my-artifact
         path: my_file.txt
      - name: Sleep for 30 seconds
-       uses: kibertoad/wait-action@1.0.1
+       uses: actions/wait-action@1.0.1
        with:
         time: '180s'
      - name: delete artifact 
-     - uses: geekyeggo/delete-artifact@v1
+     - uses: actions/delete-artifact@v1
        with:
          name: build
-     - name: Sleep for 30 seconds
-       uses: kibertoad/wait-action@1.0.1
-       with:
-        time: '180s'
+    
