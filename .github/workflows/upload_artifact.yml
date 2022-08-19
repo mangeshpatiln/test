@@ -19,6 +19,20 @@ jobs:
        with:
         name: my-artifact
         path: my_file.txt
+ 
+  delete:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+    - name: Sleep for 180 seconds
+      uses: kibertoad/wait-action@1.0.1
+      with:
+        time: '5m'
+    - name: delete artifact
+      uses: geekyeggo/delete-artifact@v1
+      with:
+          name: build
+ 
 
  
   
