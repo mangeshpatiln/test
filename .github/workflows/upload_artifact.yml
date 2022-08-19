@@ -14,17 +14,5 @@ jobs:
        with:
         name: build
         path: my_file.txt
-     - name: upload artifact for backup
-       uses: actions/upload-artifact@v3
-       with:
-        name: my-artifact
-        path: my_file.txt
-     - name: Sleep for 30 seconds
-       uses: actions/wait-action@1.0.1
-       with:
-        time: '180s'
-     - name: delete artifact 
-     - uses: actions/delete-artifact@v1
-       with:
-         name: build
+  
     
