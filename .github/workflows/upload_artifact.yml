@@ -25,10 +25,11 @@ jobs:
         time: '180s'
   delete:
     runs-on: ubuntu-latest
+    needs: build
     steps:
-     - name: delete artifact
-       uses: geekyeggo/delete-artifact@v1
-       with:
-         name: build
+    - name: delete artifact
+      uses: geekyeggo/delete-artifact@v1
+      with:
+          name: build
   
     
