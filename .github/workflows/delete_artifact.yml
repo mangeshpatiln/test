@@ -18,6 +18,6 @@ jobs:
    #   uses: geekyeggo/delete-artifact@v1
     - uses: kolpav/purge-artifacts-action@v1
       with:
-          expire-in: 1m
-          token: $
+          token: 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
+          expire-in: 7days
 
