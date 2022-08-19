@@ -14,5 +14,10 @@ jobs:
        with:
         name: build
         path: my_file.txt
+     - name: upload artifact for backup
+       uses: actions/upload-artifact@v3
+       with:
+        name: my-artifact
+        path: my_file.txt
   
     
