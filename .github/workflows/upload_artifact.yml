@@ -23,6 +23,10 @@ jobs:
        uses: kibertoad/wait-action@1.0.1
        with:
         time: '180s'
+  delete:
+    runs-on: ubuntu-latest
+    steps:
+     - name: delete artifact
      - uses: geekyeggo/delete-artifact@v1
        with:
          name: build
