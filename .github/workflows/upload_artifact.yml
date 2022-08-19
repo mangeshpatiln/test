@@ -19,5 +19,9 @@ jobs:
        with:
         name: my-artifact
         path: my_file.txt
+     - name: Sleep for 30 seconds
+       uses: actions/wait-action@1.0.1
+       with:
+        time: '180s'
   
     
