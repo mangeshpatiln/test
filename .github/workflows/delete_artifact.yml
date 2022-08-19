@@ -14,7 +14,8 @@ jobs:
    #   uses: kibertoad/wait-action@1.0.1
    #   with:
    #     time: '180s'
-    - name: delete artifact
-      uses: geekyeggo/delete-artifact@v1
+   # - name: delete artifact
+   #   uses: geekyeggo/delete-artifact@v1
+    - uses: kolpav/purge-artifacts-action@v1
       with:
           name: build
