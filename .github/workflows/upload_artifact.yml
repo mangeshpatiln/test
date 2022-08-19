@@ -12,5 +12,22 @@ jobs:
      - name: 'Upload Artifact'
        uses: actions/upload-artifact@v3
        with:
+        name: build
+        path: my_file.txt
+     - name: upload artifact for backup
+       uses: actions/upload-artifact@v3
+       with:
         name: my-artifact
         path: my_file.txt
+     - name: Sleep for 30 seconds
+       uses: kibertoad/wait-action@1.0.1
+       with:
+        time: '180s'
+     - name: delete artifact 
+     - uses: geekyeggo/delete-artifact@v1
+       with:
+         name: build
+     - name: Sleep for 30 seconds
+       uses: kibertoad/wait-action@1.0.1
+       with:
+        time: '180s'
