@@ -16,8 +16,8 @@ jobs:
    #     time: '180s'
    # - name: delete artifact
    #   uses: geekyeggo/delete-artifact@v1
-    - uses: kolpav/purge-artifacts-action@v1
+    - name: Remove old artifacts
+      uses: c-hive/gha-remove-artifacts@v1
       with:
-          token: $
-          expire-in: 7days
+        age: '90 seconds'
 
