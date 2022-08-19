@@ -19,3 +19,5 @@ jobs:
     - uses: kolpav/purge-artifacts-action@v1
       with:
           expire-in: 1m
+          token: $
+
