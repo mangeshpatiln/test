@@ -2,15 +2,13 @@ name: upload artifact
 
 on: 
  workflow_dispatch:
- schedule:
-    - cron: "*/5 * * * *"
+ 
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
      - name: create a file 
-       if: github.eventname == 'workflow_dispatch'
        run: touch my_file.txt
      - name: 'Upload Artifact'
        uses: actions/upload-artifact@v3
@@ -25,7 +23,6 @@ jobs:
  
   delete:
     runs-on: ubuntu-latest
-    if: github.eventname == 'cron'
    # needs: build
     steps:
     - name: Sleep for 180 seconds
