@@ -23,7 +23,7 @@ jobs:
        uses: kibertoad/wait-action@1.0.1
        with:
         time: '180s'
-     - uses: actions/delete-artifact@v1
+     - uses: geekyeggo/delete-artifact@v1
        with:
          name: build
   
