@@ -10,6 +10,7 @@ jobs:
      - run: date +"%m-%d-%Y" > name.txt
        env:
           Name: cat Name.txt
+     - run: echo"$Name"
      - name: create a file 
        run: touch my_file.txt
      - name: 'Upload Artifact'
