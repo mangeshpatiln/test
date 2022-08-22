@@ -9,14 +9,13 @@ jobs:
     steps:
      - run: date +"%m-%d-%Y" > name.txt
        env:
-          Name: cat Name.txt
-     - run: echo"$Name"
+          Name: build_"cat Name.txt"
      - name: create a file 
        run: touch my_file.txt
      - name: 'Upload Artifact'
        uses: actions/upload-artifact@v3
        with:
-        name: build_$Name
+        name: '$Name'
         path: my_file.txt
     
  
