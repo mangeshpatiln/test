@@ -7,15 +7,13 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-     - run: date +"%m-%d-%Y" > name.txt
-       env:
-          Name: build_"cat Name.txt"
+     - run: echo "NOW::$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_ENV
      - name: create a file 
        run: touch my_file.txt
      - name: 'Upload Artifact'
        uses: actions/upload-artifact@v3
        with:
-        name: '$Name'
+        name: $NOW
         path: my_file.txt
     
  
