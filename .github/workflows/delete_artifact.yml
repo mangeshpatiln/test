@@ -1,23 +1,17 @@
-name: delete artifact
+name: Remove old artifacts
 
-on: 
-# workflow_dispatch:
- schedule:
-  - cron: '*/5 * * * *'
+on:
+  schedule:
+    # Every day at 1am
+    - cron: '* * * * *'
 
 jobs:
-  delete:
+  remove-old-artifacts:
     runs-on: ubuntu-latest
-    #needs: build
+    timeout-minutes: 10
+
     steps:
-   # - name: Sleep for 180 seconds
-   #   uses: kibertoad/wait-action@1.0.1
-   #   with:
-   #     time: '180s'
-   # - name: delete artifact
-   #   uses: geekyeggo/delete-artifact@v1
     - name: Remove old artifacts
       uses: c-hive/gha-remove-artifacts@v1
       with:
         age: '90 seconds'
-
