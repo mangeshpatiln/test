@@ -1,0 +1,20 @@
+name: Cleanup
+on:
+ scheduled:
+      - cron: "*/5 * * * *"
+
+jobs:
+
+  delete-by-name:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Delete Artifact by Name
+        uses: jimschubert/delete-artifacts-action@v1
+        with:
+          log_level: 'debug'
+          artifact_name:build
+          min_bytes: '0'
