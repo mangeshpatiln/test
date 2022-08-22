@@ -16,5 +16,5 @@ jobs:
         uses: jimschubert/delete-artifacts-action@v1
         with:
           log_level: 'debug'
-          artifact_name:build
+          artifact_name: 'build'
           min_bytes: '0'
