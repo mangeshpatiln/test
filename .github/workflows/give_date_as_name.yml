@@ -14,8 +14,6 @@ jobs:
          mkdir -p ~/new/
          mkdir $Name
          
-       shell: bash
-
      - name: 'Upload Artifact' 
        uses: actions/upload-artifact@v3
        with:
