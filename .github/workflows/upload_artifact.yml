@@ -2,6 +2,8 @@ name: upload artifact
 
 on: 
  workflow_dispatch:
+env: 
+  Name: date '+%F_%H:%M:%S'
 
 jobs:
   build:
@@ -12,7 +14,7 @@ jobs:
      - name: 'Upload Artifact'
        uses: actions/upload-artifact@v3
        with:
-        name: build
+        name: $Name
         path: my_file.txt
     
  
