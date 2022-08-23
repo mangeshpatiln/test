@@ -9,7 +9,7 @@ jobs:
      - name: create a file 
        run: |
           touch my_file.txt
-          Name=$(date '+%F_%H:%M:%S')
+          Name=$(date '+%F%H%M%S')
           echo "MY_DATE= '$Name'" >> $GITHUB_ENV
      - name: 'Upload Artifact'
        uses: actions/upload-artifact@v3
