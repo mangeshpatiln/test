@@ -8,14 +8,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
      - name: create a file
-       run: |
-         Name=Build
-         mkdir -p ~/new/
-         cd ~/new
-         mkdir ~/new/$Name
+       run: mkdir build
          
      - name: 'Upload Artifact' 
        uses: actions/upload-artifact@v3
        with:
-        name: $Name
-        path: ~/new/*
+        name: build
+        path: build
