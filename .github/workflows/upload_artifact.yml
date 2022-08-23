@@ -2,20 +2,20 @@ name: upload artifact
 
 on: 
  workflow_dispatch:
-env: 
-  Name: date '+%F_%H:%M:%S'
-
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
      - name: create a file 
-       run: touch my_file.txt
+       run: |
+          touch my_file.txt
+          Name=$(date '+%F_%H:%M:%S')
+          echo "$Name" >> $GITHUB_ENV
      - name: 'Upload Artifact'
        uses: actions/upload-artifact@v3
        with:
-        name: $Name
-        path: my_file.txt
+         name: $GITHUB_ENV
+         path: my_file.txt
     
  
  
