@@ -12,7 +12,6 @@ jobs:
          Name=$(date '+%F_%H:%M:%S')
          mkdir -p ~/new/
          cd ~/new
-         rm -rf *
          mkdir $Name
          
      - name: 'Upload Artifact' 
