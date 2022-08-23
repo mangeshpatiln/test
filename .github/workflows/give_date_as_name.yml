@@ -12,7 +12,7 @@ jobs:
     steps:
       - uses: actions/upload-artifact@v3
         with:
-          path: $Name.txt
+          path: web
       - name: create a file
         run:  |
           touch $Name.txt
@@ -24,4 +24,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
          name: $Name
-         path: $Name.txt
+         path: web
