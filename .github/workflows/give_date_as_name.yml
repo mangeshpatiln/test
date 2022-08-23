@@ -2,9 +2,6 @@ name: asigning date as a name
 # This workflow is triggered at a scheduled interval of every 30 minutes
 on:
     workflow_dispatch:
-defaults:
-  run:
-    working-directory: web
 
 jobs:
   push:
@@ -13,11 +10,14 @@ jobs:
           Name: date '+%F_%H:%M:%S'
     steps:
      - name: create a file
-       run: touch $Name
+       run:  |
+          touch $Name.txt
+          ls
+          echo "File is created."
      - name: 'Upload Artifact'
        env: 
          new_path: ls 
        uses: actions/upload-artifact@v3
        with:
         name: $Name
-        path: web
+        path: $Name.txt
