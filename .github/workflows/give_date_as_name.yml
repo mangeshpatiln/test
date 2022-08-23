@@ -12,7 +12,7 @@ jobs:
          Name=$(date '+%F_%H:%M:%S')
          mkdir -p ~/new/
          cd ~/new
-         mkdir $Name
+         mkdir ~/new/$Name
          
      - name: 'Upload Artifact' 
        uses: actions/upload-artifact@v3
