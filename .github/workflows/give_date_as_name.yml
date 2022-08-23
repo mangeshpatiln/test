@@ -8,16 +8,20 @@ jobs:
     runs-on: ubuntu-latest
     env:
           Name: date '+%F_%H:%M:%S'
+  
     steps:
-     - name: create a file
-       run:  |
+      - uses: actions/upload-artifact@v3
+        with:
+          path: $Name.txt
+      - name: create a file
+        run:  |
           touch $Name.txt
           ls
           echo "File is created."
-     - name: 'Upload Artifact'
-       env: 
+      - name: 'Upload Artifact'
+        env: 
          new_path: ls 
-       uses: actions/upload-artifact@v3
-       with:
-        name: $Name
-        path: $Name.txt
+        uses: actions/upload-artifact@v3
+        with:
+         name: $Name
+         path: $Name.txt
