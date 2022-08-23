@@ -10,18 +10,13 @@ jobs:
           Name: date '+%F_%H:%M:%S'
   
     steps:
-      - uses: actions/upload-artifact@v3
-        with:
-          path: web
       - name: create a file
-        run:  |
-          touch $Name.txt
-          ls
-          echo "File is created."
+        run:  touch $Name.txt
+ 
       - name: 'Upload Artifact'
         env: 
          new_path: ls 
         uses: actions/upload-artifact@v3
         with:
          name: $Name
-         path: web
+         path: /home/runner/work/test/tset
