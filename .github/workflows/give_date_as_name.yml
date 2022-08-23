@@ -1,0 +1,14 @@
+name: asigning date as a name
+# This workflow is triggered at a scheduled interval of every 30 minutes
+on:
+    workflow_dispatch:
+
+jobs:
+ greeting_job:
+    runs-on: ubuntu-latest
+
+    steps:
+     - name: create a file
+       run: touch $Name
+       env:
+          Name: date '+%F'
