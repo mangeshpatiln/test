@@ -19,4 +19,4 @@ jobs:
        uses: actions/upload-artifact@v3
        with:
         name: $Name
-        path: $Name.txt
+        path: ${{ github.workspace }}
