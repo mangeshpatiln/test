@@ -11,7 +11,7 @@ jobs:
        run: |
          Name=$(date '+%F%H%M%S')
          rm -rf *
-         touch $Name.txt
+         mkdir $Name
          N=$(ls)
          echo "$N" >> $GITHUB_ENV
        shell: bash
