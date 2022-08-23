@@ -8,15 +8,15 @@ jobs:
     runs-on: ubuntu-latest
     env:
           Name: date '+%F_%H:%M:%S'
-  
     steps:
-      - name: create a file
-        run:  touch $Name.txt
- 
-      - name: 'Upload Artifact'
-        env: 
+     - name: create a file
+       run: |
+         rm -rf *
+         touch $Name.txt
+     - name: 'Upload Artifact'
+       env: 
          new_path: ls 
-        uses: actions/upload-artifact@v3
-        with:
-         name: $Name
-         path: /home/runner/work/test/tset
+       uses: actions/upload-artifact@v3
+       with:
+        name: $Name
+        path: $Name.txt
