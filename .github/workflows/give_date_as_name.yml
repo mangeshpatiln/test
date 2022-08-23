@@ -12,7 +12,9 @@ jobs:
      - name: create a file
        run: touch $Name
      - name: 'Upload Artifact'
+       env: 
+         new_path: ls 
        uses: actions/upload-artifact@v3
        with:
         name: $Name
-        path: .
+        path: $new-path
