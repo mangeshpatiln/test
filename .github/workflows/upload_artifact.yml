@@ -9,12 +9,12 @@ jobs:
      - name: create a file 
        run: |
           touch my_file.txt
-          Name=$(date '+%F%H%M%S')
-          echo "$Name" >> $GITHUB_ENV
+          Name=$(date '+%F_%H:%M:%S')
+          echo "MY_DATE= '$Name'" >> $GITHUB_ENV
      - name: 'Upload Artifact'
        uses: actions/upload-artifact@v3
        with:
-         name: $GITHUB_ENV
+         name: ${{ env.MY_DATE }}
          path: my_file.txt
     
  
