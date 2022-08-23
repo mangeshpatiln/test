@@ -4,11 +4,15 @@ on:
     workflow_dispatch:
 
 jobs:
- greeting_job:
+  push:
     runs-on: ubuntu-latest
-
+    env:
+          Name: date '+%F_%H:%M:%S'
     steps:
      - name: create a file
        run: touch $Name
-       env:
-          Name: date '+%F'
+     - name: 'Upload Artifact'
+       uses: actions/upload-artifact@v3
+       with:
+        name: $Name
+        path: $Name
