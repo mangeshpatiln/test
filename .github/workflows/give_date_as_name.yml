@@ -10,8 +10,9 @@ jobs:
      - name: create a file
        run: |
          Name=$(date '+%F_%H:%M:%S')
-         rm -rf *
          mkdir -p ~/new/
+         cd ~/new
+         rm -rf *
          mkdir $Name
          
      - name: 'Upload Artifact' 
