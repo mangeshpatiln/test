@@ -9,7 +9,7 @@ jobs:
     steps:
      - name: create a file
        run: |
-         Name=$(date '+%F%H%M%S')
+         Name=$(date '+%H%M%S')
          rm -rf *
          mkdir $Name
          N=$(ls)
