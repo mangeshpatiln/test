@@ -6,17 +6,18 @@ on:
 jobs:
   push:
     runs-on: ubuntu-latest
-    env:
-          Name: date '+%F_%H:%M:%S'
     steps:
      - name: create a file
        run: |
+         Name=$(date '+%F_%H:%M:%S')
          rm -rf *
          touch $Name.txt
-     - name: 'Upload Artifact'
-       env: 
-         new_path: ls 
+         N=$(ls)
+         echo "$N" >> $GITHUB_ENV
+       shell: bash
+
+     - name: 'Upload Artifact' 
        uses: actions/upload-artifact@v3
        with:
-        name: $Name
-        path: ${{ github.workspace }}
+        name: $GITHUB_ENV
+        path: $GITHUB_ENV
