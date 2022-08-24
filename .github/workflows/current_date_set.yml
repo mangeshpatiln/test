@@ -13,6 +13,8 @@ jobs:
     - name: Get current time
       uses: gerred/actions/current-time@master
       id: current-time
+    - name: set time zone
+      run: timedatectl set-timezone Asia/Kolkata
     - name: Use current time
       env:
         TIME: "${{ steps.current-time.outputs.time }}"
