@@ -6,6 +6,10 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
+    - name: Setup timezone
+      uses: zcong1993/setup-timezone@master
+      with:
+       timezone: Asia/Mumbai
     - name: Get current time
       uses: gerred/actions/current-time@master
       id: current-time
