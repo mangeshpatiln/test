@@ -7,9 +7,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Setup timezone
-      uses: zcong1993/setup-timezone@master
+      uses: szenius/set-timezone@v1.0
       with:
-       timezone: Asia/Mumbai
+       timezoneLinux: "Asia/Mumbai"
     - name: Get current time
       uses: gerred/actions/current-time@master
       id: current-time
