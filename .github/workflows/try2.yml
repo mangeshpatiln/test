@@ -1,17 +1,15 @@
-name: TRY2
+name: get current time
 on: 
    workflow_dispatch:
 jobs:
   # Deploy Process
   deploy:
     runs-on: ubuntu-latest
-    steps:   
-    - name: Copy single file to remote
-      uses: appleboy/ssh-action@master
-      with:
-          key: ${{ secrets.PRIVATE_KEY }}
-          host: test.dataseers.in
-          username: mpatil
-          port: 443
-          script: |
-            ls -la
+    steps:
+    - name: Get current time
+      uses: gerred/actions/current-time@master
+      id: current-time
+    - name: Use current time
+      env:
+        TIME: "${{ steps.current-time.outputs.time }}"
+      run: echo $TIME
