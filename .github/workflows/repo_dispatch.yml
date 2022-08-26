@@ -3,9 +3,12 @@ name: repo dispatch
 on:
   repository_dispatch:
       type: [build]
+env:
+  Name: ${{ github.event.client_payload.one}}
+  Company: ${{ github.event.client_payload.two}}
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
      - name: message
-       run: echo "My name is ${{ github.event.client_payload.one}} and i am working for ${{ github.event.client_payload.two}}"
+       run: echo "My name is ${{ env.Name }} and i am working for ${{ env.Company }}"
