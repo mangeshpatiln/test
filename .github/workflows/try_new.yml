@@ -20,3 +20,7 @@ jobs:
             - Second Change
           draft: false
           prerelease: false
+     - name: Set enviroment for github-release
+       run: |
+        echo ::set-env name=RELEASE_TAG::"v1.0.0"
+        echo ::set-env name=RELEASE_NAME::"$GITHUB_WORKFLOW"
