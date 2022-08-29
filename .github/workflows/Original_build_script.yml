@@ -82,7 +82,7 @@ jobs:
    
       uses: actions/upload-release-asset@v1
       env:
-        GITHUB_TOKEN: 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
+        GITHUB_TOKEN: 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
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: /home/runner/work/test/test/my_file.txt
