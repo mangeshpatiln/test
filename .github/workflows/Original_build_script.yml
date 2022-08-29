@@ -68,12 +68,12 @@ jobs:
       
     - name: Release snapshot
       if: ${{ github.event.client_payload.passed }}
-      id: release-snapshot
-      uses: actions/create-release@latest
+ 
+      uses: actions/upload-release-asset@v1
       env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ github.token }}
       with:
-          tag_name: ${{ steps.date.outputs.date }}
-          release_name: ${{ steps.date.outputs.date }}
-          draft: false
-          prerelease: false
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: my_file.txt
+        asset_name: Build_${{ env.version }}.tar.gz
+        asset_content_type: application/gzip
