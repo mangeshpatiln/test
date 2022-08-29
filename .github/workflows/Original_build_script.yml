@@ -88,7 +88,6 @@ jobs:
       env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-          files: /home/runner/work/test/test/my_file.txt
           upload_url: ${{ steps.create_release.outputs.upload_url }}  
           asset_path: my_file.txt
           asset_name: Build_${{ env.version }}.tar.gz
