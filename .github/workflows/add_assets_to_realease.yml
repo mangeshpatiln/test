@@ -17,7 +17,7 @@ jobs:
            pwd
            ls
       - name: Upload Release Asset
-      - uses: meeDamian/github-release@2.0
+        uses: meeDamian/github-release@2.0
         with:
          token: ${{ secrets.GITHUB_TOKEN }}
          tag: Tag_name
