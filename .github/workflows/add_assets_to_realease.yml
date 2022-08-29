@@ -22,6 +22,7 @@ jobs:
          token: ${{ secrets.GITHUB_TOKEN }}
          tag: Tag_name
          name: Release_name
+         allow_override: true
          files: my_file.txt
     #  - name: Upload Release Asset
     #    id: upload-release-asset 
