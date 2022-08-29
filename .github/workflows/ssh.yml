@@ -1,22 +1,33 @@
-name: remote ssh command
-on: 
-  workflow_dispatch:
-jobs:
+name: check
+on:
 
-  build:
-    name: Build
-    runs-on: ubuntu-latest
+  workflow_dispatch:
+  push: 
+    branches: [main]
+    paths: [package.json]
+  pull_request:
+    branches: [main]
+env:
+     version: ${{ github.event.client_payload.version }}
+
+jobs:
+  snyk-analysis:
+    runs-on: ubuntu-20.04
+    
     steps:
-    - name: run
-      run: sudo ufw allow ssh
-    - name: executing remote ssh commands using password
-      uses: appleboy/ssh-action@master
+    - name: build
+      run: make build
+    - name: version
+      run: echo "::set-output name=version::$(./bin/azblogfilter --version)"
+      id: version
+    - name: release
+      uses: actions/create-release@v1
+      id: create_release
       with:
-        host: test.dataseers.in
-        username: mpatil
-        password: mp@123DataSeer$
-        port: 443
-        script: |
-             whoami
-             cd /home/mpatil/new
-             touch new.txt
+       draft: false
+       prerelease: false
+       release_name: ${{ steps.version.outputs.version }}
+       tag_name: ${{ github.ref }}
+       body_path: CHANGELOG.md
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
