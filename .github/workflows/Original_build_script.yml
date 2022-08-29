@@ -56,18 +56,9 @@ jobs:
    #     tar -rvf ${{ env.ARCHIVE_NAME }}.tar ./public/src/assets/networks/
    #     pwd
    #     ls -l
-    - name: Create Release
-      id: create_release
-      uses: actions/create-release@latest
-      env:
-         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
-      with:
-          tag_name: v.2.50.2
-          release_name: Build_${{ env.version }}_1.tar.gz
-          draft: false
-          prerelease: false
+
     - name: Archive production artifacts
-      if: ${{ !github.event.client_payload.passed }}
+      if: ${{ github.event.client_payload.passed }}
       uses: actions/upload-artifact@v3
       with:
         name: Build_${{ env.version }}.tar.gz
@@ -77,14 +68,27 @@ jobs:
    #   id: date
    #   run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
       
-    - name: Release snapshot
-      if: ${{ github.event.client_payload.passed }}
+ 
+
+
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
       env:
-         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-   
-      uses: actions/upload-release-asset@v1
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: /home/runner/work/test/test/my_file.txt
-        asset_name: Build_${{ env.version }}.tar.gz
-        asset_content_type: application/gzip
+          tag_name: ${{ env.version }}
+          release_name: Build_${{ env.version }}.tar.gz
+          draft: false
+          prerelease: false
+    - name: Upload Release Asset
+      id: upload-release-asset 
+      if: ${{ github.event.client_payload.passed }}
+      uses: actions/upload-release-asset@v1
+      env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}  
+          asset_path: ./Build_${{ env.version }}.tar.gz
+          asset_name: Build_${{ env.version }}.tar.gz
+          asset_content_type: application/gzip
