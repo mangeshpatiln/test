@@ -56,6 +56,16 @@ jobs:
    #     tar -rvf ${{ env.ARCHIVE_NAME }}.tar ./public/src/assets/networks/
    #     pwd
    #     ls -l
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@latest
+      env:
+         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+      with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
     - name: Archive production artifacts
       if: ${{ !github.event.client_payload.passed }}
       uses: actions/upload-artifact@v3
