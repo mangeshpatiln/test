@@ -12,6 +12,10 @@ jobs:
     steps:
       - name: create file
         run: touch my_file.txt
+      - name: display 
+        run: |
+           pwd
+           ls
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Create Release
