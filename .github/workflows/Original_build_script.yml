@@ -63,7 +63,7 @@ jobs:
          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
       with:
           tag_name: v.2.50.2
-          release_name: Build_${{ env.version }}.tar.gz
+          release_name: Build_${{ env.version }}_1.tar.gz
           draft: false
           prerelease: false
     - name: Archive production artifacts
@@ -82,7 +82,7 @@ jobs:
    
       uses: actions/upload-release-asset@v1
       env:
-        GITHUB_TOKEN: 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 
+        GITHUB_TOKEN: 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 
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: /home/runner/work/test/test/my_file.txt
