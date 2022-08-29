@@ -90,6 +90,6 @@ jobs:
       with:
           files: /home/runner/work/test/test/my_file.txt
           upload_url: ${{ steps.create_release.outputs.upload_url }}  
-          asset_path: ./Build_${{ env.version }}.tar.gz
+          asset_path: my_file.txt
           asset_name: Build_${{ env.version }}.tar.gz
           asset_content_type: application/gzip
