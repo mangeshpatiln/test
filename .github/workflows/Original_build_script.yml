@@ -73,9 +73,9 @@ jobs:
         name: Build_${{ env.version }}.tar.gz
         path: my_file.txt
     
-    - name: Get current date
-      id: date
-      run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
+   # - name: Get current date
+   #   id: date
+   #   run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
       
     - name: Release snapshot
       if: ${{ github.event.client_payload.passed }}
