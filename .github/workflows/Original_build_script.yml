@@ -79,6 +79,8 @@ jobs:
       
     - name: Release snapshot
       if: ${{ github.event.client_payload.passed }}
+      env:
+         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
    
       uses: actions/upload-release-asset@v1
       with:
