@@ -81,12 +81,12 @@ jobs:
           release_name: Build_${{ env.version }}.tar.gz
           draft: false
           prerelease: false
-    - name: Upload Release Asset
-      id: upload-release-asset 
-      if: ${{ github.event.client_payload.passed }}
-      uses: actions/upload-release-asset@v1
+    - name: Upload release binary
+      uses: actions/upload-release-asset@v1.0.2
+      env:
+          GITHUB_TOKEN: ${{ github.token }}
       with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}  
+          upload_url: ${{ steps.get_release.outputs.upload_url }}
           asset_path: my_file.txt
-          asset_name: Build_${{ env.version }}.tar.gz
-          asset_content_type: application/gzip
+          asset_name: my_file.txt
+          asset_content_type: application/octet-stream
