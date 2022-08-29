@@ -34,6 +34,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
         with:
-          asset_paths: '["./my_file.txt"]'
+          asset_paths: '["/home/runner/work/test/test/my_file.txt"]'
     
 
