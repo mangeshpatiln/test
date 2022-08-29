@@ -7,27 +7,16 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      
-
-    # - name: Install SSH Key
-     #   uses: shimataro/ssh-key-action@v2
-     #   with:
-      #    key: ${{ secrets.PRIVATE_KEY }}
-       #   known_hosts: unnecessary
-
-      #- name: Adding Known Hosts
-       # run: ssh-keyscan -p 22 -H 192.168.0.228 >> ~/.ssh/known_hosts
-
-    #  - name: Deploy with rsync
-     #   run: rsync -avz -e "ssh -p 22" ./home/mpatil/ mpatil@192.168.0.228:.
-
-      - name: check ssh to Server
-        uses: appleboy/ssh-action@master
-        with:
-          host: 192.168.0.228
-          username: mpatil
-          key: ${{ secrets.PRIVATE_KEY_MAIN }}
-          port: 22
-          script: |
-            whoami
+     - name: creating release
+       uses: actions/create-release@v1
+       env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+       with:
+          tag_name: Tag_name
+          release_name: Release_name
+          body: |
+            Changes in this Release
+            - First Change
+            - Second Change
+          draft: false
+          prerelease: false
