@@ -6,9 +6,10 @@ on:
 env:
   Name: ${{ github.event.client_payload.one}}
   Company: ${{ github.event.client_payload.two}}
+  artifact: ${{ github.event.repository.name }}
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
      - name: message
-       run: echo "My name is ${{ env.Name }} and i am working for ${{ env.Company }}"
+       run: echo "My name is ${{ env.Name }} and i am working for ${{ env.Company }}--- ${{ env.artifact}}"
