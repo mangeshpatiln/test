@@ -19,7 +19,7 @@ jobs:
       with:
         repository: albanm/node-libxslt
         path: node-libxslt
-        token: ${{ secrets.MY_PAT }}
+        token: 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
     - name: Get libxslt file
       run: |
         echo ${HOME}
