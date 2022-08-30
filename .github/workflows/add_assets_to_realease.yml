@@ -39,6 +39,8 @@ jobs:
         with:
           name: Build_${{ env.MY_DATE }}
           path: ./
+      - name: Zip artifact for deployment
+        run: zip my_file.zip ./my_file.txt -r
       - name: Display structure of downloaded files
         run: ls -R
       - name: Upload the release asset
@@ -48,8 +50,8 @@ jobs:
         with:
          upload_url: ${{ steps.create_release.outputs.upload_url }}
          asset_path: ./
-         asset_name: my_file.txt
-         asset_content_type: application/gzip
+         asset_name: my_file.zip
+         asset_content_type: application/zip
       
  
     # - name: Upload Release Asset
