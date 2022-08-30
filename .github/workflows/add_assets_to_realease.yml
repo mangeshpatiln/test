@@ -14,36 +14,33 @@ jobs:
     name: Create Release
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout 
-        uses: actions/checkout@v3
       - name: create file
         run: touch my_file.txt
       - name: display 
         run: |
            pwd
            ls
-      - uses: szenius/set-timezone@v1.0
-        with:
-         timezoneLinux: "Asia/Singapore"
-        env:
-          TIME: "${{ steps.current-time.outputs.time }}"
-    
-      - name: Create Release
-        id: create_release
+      - name: creating release
         uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
         with:
           tag_name: Build_${{ env.version }}
-          release_name: Build_${{ env.version }}_${{ TIME }}
+          release_name: Release_${{ env.version }}
+          body: |
+            Changes in this Release
+            - First Change
+            - Second Change
           draft: false
           prerelease: false
+      - name: Checkout
+        uses: actions/checkout@v3
       - name: Upload Release Asset
         uses: meeDamian/github-release@2.0
         with:
          token: ${{ secrets.GITHUB_TOKEN }}
          tag: Build_${{ env.version }}
-         name: Build_${{ env.version }}_${{ TIME }}
+         name: Release_${{ env.version }}
          allow_override: true
          files: my_file.txt
 
