@@ -46,8 +46,8 @@ jobs:
          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
          upload_url: ${{ steps.create_release.outputs.upload_url }}
-         asset_path: artifact.tar.gz
-         asset_name: artifact.tar.gz
+         asset_path: ./
+         asset_name: Build_${{ env.MY_DATE }}
          asset_content_type: application/gzip
       
  
