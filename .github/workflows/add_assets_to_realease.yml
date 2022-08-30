@@ -32,12 +32,21 @@ jobs:
            pwd
            ls
  
-
      - name: Upload Release Asset
-       uses: meeDamian/github-release@2.0
+       id: upload-release-asset 
+       uses: actions/upload-release-asset@v1
+       env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
        with:
-         token: ${{ secrets.GITHUB_TOKEN }}
-         tag: Tag_${{ env.version }}
-         name: Release_${{ env.version }}
-         allow_override: true
-         files: my_file.txt
+          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+          asset_path: ./my_file.txt
+          asset_name: my_file.txt
+          asset_content_type: application/text
+    # - name: Upload Release Asset
+    #   uses: meeDamian/github-release@2.0
+    #   with:
+    #     token: ${{ secrets.GITHUB_TOKEN }}
+    #     tag: Tag_${{ env.version }}
+    #     name: Release_${{ env.version }}
+    #     allow_override: true
+    #     files: my_file.txt
