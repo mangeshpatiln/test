@@ -3,7 +3,7 @@ on:
 
   workflow_dispatch:
   repository_dispatch:
-       type: [build]
+       types: [Test_Build]
 
 env:
      version: ${{ github.event.client_payload.version }}
