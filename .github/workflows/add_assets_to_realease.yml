@@ -39,7 +39,8 @@ jobs:
         with:
           name: Build_${{ env.MY_DATE }}
           path: ./
-
+      - name: Display structure of downloaded files
+        run: ls -R
       - name: Upload the release asset
         uses: actions/upload-release-asset@v1
         env:
