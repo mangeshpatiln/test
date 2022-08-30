@@ -35,12 +35,15 @@ jobs:
           body: TODO
           draft: false
           prerelease: false
-  
+      - name: create a dir
+        run: |
+           cd ./
+           mkdir task
       - name: Download Artifact
         uses: actions/download-artifact@v2
         with:
           name: Build_${{ env.MY_DATE }}
-          path: ./
+          path: ./task/
       - name: Zip artifact for deployment
         run: zip my_file.zip ./my_file.txt -r
       - name: Display structure of downloaded files
@@ -51,8 +54,8 @@ jobs:
          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
          upload_url: https://uploads.github.com/repos/mangeshpatiln/test/releases/75758962/assets{?name,label}
-         asset_path: ./
-         asset_name: my_file.zip
+         asset_path: ./task
+         asset_name: task.zip
          asset_content_type: application/zip
       
  
