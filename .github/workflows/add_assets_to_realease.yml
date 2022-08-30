@@ -20,27 +20,14 @@ jobs:
         run: |
            pwd
            ls
-      - name: creating release
-        uses: actions/create-release@v1
-        env:
-           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
-        with:
-          tag_name: Build_${{ env.version }}
-          release_name: Release_${{ env.version }}
-          body: |
-            Changes in this Release
-            - First Change
-            - Second Change
-          draft: false
-          prerelease: false
-      - name: Checkout
-        uses: actions/checkout@v1
+ 
+
       - name: Upload Release Asset
         uses: meeDamian/github-release@2.0
         with:
          token: ${{ secrets.GITHUB_TOKEN }}
-         tag: Build_${{ env.version }}
-         name: Release_${{ env.version }}
+         tag: Tag_name
+         name: Release_name
          allow_override: true
          files: my_file.txt
 
