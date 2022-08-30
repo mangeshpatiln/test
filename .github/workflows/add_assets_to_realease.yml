@@ -34,7 +34,7 @@ jobs:
           draft: false
           prerelease: false
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v1
       - name: Upload Release Asset
         uses: meeDamian/github-release@2.0
         with:
