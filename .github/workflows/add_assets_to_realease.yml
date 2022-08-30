@@ -48,15 +48,15 @@ jobs:
         run: zip my_file.zip ./my_file.txt -r
       - name: Display structure of downloaded files
         run: ls -R
-      - name: Upload the release asset
+      - name: Upload Release Asset
         uses: actions/upload-release-asset@v1
         env:
-         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-         upload_url: https://uploads.github.com/repos/mangeshpatiln/test/releases/75758962/assets{?name,label}
-         asset_path: ./task
-         asset_name: task.zip
-         asset_content_type: application/zip
+          upload_url: ${{ github.event.release.upload_url }} 
+          asset_path: ./test/my_file.txt
+          asset_name: my_file.txt
+          asset_content_type: application/octet-stream
       
  
     # - name: Upload Release Asset
