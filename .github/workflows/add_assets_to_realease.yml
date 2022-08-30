@@ -34,10 +34,10 @@ jobs:
           asset_path: my_file.txt
           asset_name: my_file.txt
           asset_content_type: application/octet-stream
-     - name: create file
-       run: touch my_file.txt
-     - name: display 
-       run: |
+      - name: create file
+        run: touch my_file.txt
+      - name: display 
+        run: |
            pwd
            ls
  
