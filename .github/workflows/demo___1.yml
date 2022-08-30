@@ -3,8 +3,8 @@ name: check new
 on:
 
   workflow_dispatch:
-  repository_dispatch:
-       type: [build]
+#  repository_dispatch:
+#       type: [build]
 
 env:
      version: ${{ github.event.client_payload.version }}
