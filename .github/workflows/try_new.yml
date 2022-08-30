@@ -1,4 +1,4 @@
-name: deploy
+name: deploy_create realease
 on:
   
     workflow_dispatch:
