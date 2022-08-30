@@ -33,7 +33,7 @@ jobs:
           tag_name: Tag_${{ env.version }}
           release_name: Release_${{ env.version }}
           body: TODO
-          draft: true
+          draft: false
           prerelease: false
   
       - name: Download Artifact
