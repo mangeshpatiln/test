@@ -12,12 +12,16 @@ jobs:
     name: Create Release
     runs-on: ubuntu-latest
     steps:
-      - name: create file
-        run: touch my_file.txt
-      - name: display 
+      - name: create a file 
         run: |
-           pwd
-           ls
+          touch my_file.txt
+          Name=$(date +ON-%u-%h-%y-AT-%I.%M.%S.%p)
+          echo "MY_DATE= $Name" >> $GITHUB_ENV
+      - name: 'Upload Artifact'
+        uses: actions/upload-artifact@v3
+        with:
+         name: Build_${{ env.MY_DATE }}
+         path: my_file.txt
       - name: Create release
         id: create_release
         uses: actions/create-release@v1
@@ -29,6 +33,12 @@ jobs:
           body: TODO
           draft: true
           prerelease: false
+  
+      - name: Download Artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: Build_${{ env.MY_DATE }}
+          path: .
 
       - name: Upload Release Asset
         id: upload-release-asset 
@@ -37,15 +47,10 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-          asset_path: ./my_file.txt
-          asset_name: my_file.txt
+          asset_path: .
+          asset_name: Build_${{ env.MY_DATE }}
           asset_content_type: application/octet-stream
-      - name: create file
-        run: touch my_file.txt
-      - name: display 
-        run: |
-           pwd
-           ls
+      
  
     # - name: Upload Release Asset
     #   uses: meeDamian/github-release@2.0
