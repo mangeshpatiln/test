@@ -47,7 +47,11 @@ jobs:
       - name: Zip artifact for deployment
         run: zip my_file.zip ./my_file.txt -r
       - name: Display structure of downloaded files
-        run: ls -R
+        env: 
+           URL: ${{ github.event.release.upload_url }} 
+        run: |
+          echo $URL
+          ls -R
       - name: Upload Release Asset
         uses: actions/upload-release-asset@v1
         env:
