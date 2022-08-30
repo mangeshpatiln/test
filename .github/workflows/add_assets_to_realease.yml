@@ -12,6 +12,12 @@ jobs:
     name: Create Release
     runs-on: ubuntu-latest
     steps:
+      - name: create file
+        run: touch my_file.txt
+      - name: display 
+        run: |
+           pwd
+           ls
       - name: Create release
         id: create_release
         uses: actions/create-release@v1
