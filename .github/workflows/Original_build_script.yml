@@ -1,7 +1,8 @@
 name: snyk-analysis
 on:
-  repository_dispatch:
-     type: [test_result]
+  workflow_dispatch:
+#  repository_dispatch:
+#     type: [test_result]
 
   workflow_dispatch:
   push: 
