@@ -1,0 +1,44 @@
+
+name: check new
+on:
+
+  workflow_dispatch:
+  repository_dispatch:
+       type: [build]
+
+env:
+     version: ${{ github.event.client_payload.version }}
+jobs:
+ check:
+    name: Create Release
+    runs-on: ubuntu-latest
+    steps:
+     - name: creating release
+       uses: actions/create-release@v1
+       env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+       with:
+          tag_name: Tag_name
+          release_name: Release_name
+          body: |
+            Changes in this Release
+            - First Change
+            - Second Change
+          draft: false
+          prerelease: false
+     - name: create file
+       run: touch my_file.txt
+     - name: display 
+       run: |
+           pwd
+           ls
+ 
+
+     - name: Upload Release Asset
+       uses: meeDamian/github-release@2.0
+       with:
+         token: ${{ secrets.GITHUB_TOKEN }}
+         tag: Tag_name
+         name: Release_name
+         allow_override: true
+         files: my_file.txt
