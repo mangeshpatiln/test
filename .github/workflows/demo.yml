@@ -10,5 +10,7 @@ jobs:
 
     steps:
      - name: get commit msg
-       run: echo "Commit massage is - ${{ github.event.head_commit.message }}"   
+       run: |
+          echo "${{toJSON(github.event)}}"
+          echo "Commit massage is - ${{ github.event.head_commit.message }}"   
       
