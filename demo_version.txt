@@ -1,0 +1,1 @@
+This is test file used for getting the version from commit massege.
