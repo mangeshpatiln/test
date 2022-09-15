@@ -1,19 +1,14 @@
-name: Command via SSH
+name: Get version via commit massage
 
 on: 
+  push:
   workflow_dispatch:
 
 jobs:
-  build:
+  get_msg:
     runs-on: ubuntu-latest
 
     steps:
-     - name: executing remote ssh commands using ssh key
-       uses: appleboy/ssh-action@master
-       with:
-         host: 114.143.203.65
-         username: mpatil
-         key: ${{ secrets.PRIVATE_KEY }}
-         port: 8443
-         script: whoami
+     - name: get commit msg
+       run: echo "Commit massage is - ${{ github.event.head_commit.message }}"   
       
