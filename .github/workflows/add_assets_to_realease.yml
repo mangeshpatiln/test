@@ -20,7 +20,7 @@ jobs:
           zip my_file.zip ./my_file.txt -r
       - name: Create Release
         id: create_release
-        uses: actions/create-release@v1
+        uses: actions/create-release@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
