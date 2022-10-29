@@ -13,14 +13,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v1
+        uses: actions/checkout@v3
       - name: create a file 
         run: |
           touch my_file.txt
           zip my_file.zip ./my_file.txt -r
       - name: Create Release
         id: create_release
-        uses: actions/create-release@v3
+        uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
