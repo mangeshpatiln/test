@@ -7,7 +7,7 @@ jobs:
   conn_server:
     name: 'conn_server'
     environment: ppm_prod    
-    runs-on: ${{ inputs.RUNNER }}
+    runs-on: ubuntu-latest
     steps:
       - name: conn_step1
         uses: appleboy/ssh-action@master 
