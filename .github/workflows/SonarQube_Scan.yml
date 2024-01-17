@@ -11,7 +11,7 @@ jobs:
       uses: appleboy/ssh-sction@master
       with:
         host: 192.168.26.19
-        key: ${{secrets.SECRETE}}
+        key: ${{ secrets.SECRETE_KEY }}
         port: 22
         script: |
             ls -ltr
