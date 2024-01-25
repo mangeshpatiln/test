@@ -13,7 +13,8 @@ pipeline {
         }
         stage('projectupdate') {
                         steps {
-                    sh 'sed -i 's/seerportal_mangesh/seerportal_amit_3/g' sonar-project.properties'
+                    sh '''# ! /bin/bash/
+                        sed -i 's/seerportal_mangesh/seerportal_amit_3/g' sonar-project.properties'''
                 }
         }
         stage('sonarscan') {
