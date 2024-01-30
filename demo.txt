@@ -1,1 +1,1 @@
-echo "This is i am trying to ssh 228"
+""echo "This is i am trying to ssh 228"
