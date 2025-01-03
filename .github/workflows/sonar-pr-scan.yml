@@ -27,10 +27,11 @@ jobs:
 
       - name: Update SonarQube properties file
         run: |
-          # Dynamically update the sonar-project.properties with the PR branch and project key
           echo "sonar.projectKey=${PR_AUTHOR}" >> sonar-project.properties
-          echo "sonar.branch.name=${GITHUB_REF#refs/heads/}" >> sonar-project.properties  # Get PR branch name
-          echo "sonar.sources=." >> sonar-project.properties  # Assuming all sources in root directory
+          echo "sonar.branch.name=${GITHUB_REF#refs/heads/}" >> sonar-project.properties
+          echo "sonar.sources=." >> sonar-project.properties
+          echo "sonar.host.url=http://192.168.0.25:9000" >> sonar-project.properties
+          echo "sonar.login=${{ secrets.SONAR_TOKEN }}" >> sonar-project.properties
 
       - name: Verify sonar-project.properties
         run: |
