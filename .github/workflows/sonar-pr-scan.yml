@@ -1,0 +1,26 @@
+name: SonarQube PR Scan
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]  # Trigger on PR open, update, or reopen
+
+jobs:
+  sonar_scan:
+    runs-on: self-hosted  # Runs on a self-hosted runner
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Get PR author name
+        id: pr_author
+        run: |
+          PR_AUTHOR=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+              https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }} | \
+              jq -r .user.login)
+          echo "PR_AUTHOR=${PR_AUTHOR}" >> $GITHUB_ENV
+
+      - name: Update SonarQube properties file
+        run: |
+          echo "sonar.projectKey=${PR_AUTHOR}" >> sonar-project.properties
+
