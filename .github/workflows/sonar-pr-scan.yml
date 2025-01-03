@@ -37,3 +37,56 @@ jobs:
         run: |
           cat sonar-project.properties
           sonar-scanner
+
+      - name: Wait for SonarQube scan result (1 minute)
+        run: |
+          sleep 60
+
+      - name: Check SonarQube scan result
+        run: |
+          # Extract the branch name (assume it's the same as PR branch)
+          BRANCH_NAME=${{ github.head_ref }}
+
+          # SonarQube analysis date and time extraction logic
+          date1=$(curl -u mpatil:mp@123 'http://192.168.0.25:9000/api/components/show?component=seerportal_mangesh&branch='${BRANCH_NAME}'' | awk -F'analysisDate":"' '{print $2}' | awk -F'T' '{print $1}')
+          time1=$(curl -u mpatil:mp@123 'http://192.168.0.25:9000/api/components/show?component=seerportal_mangesh&branch='${BRANCH_NAME}'' | awk -F'analysisDate":"' '{print $2}' | awk -F'+0530' '{print $1}' | awk -F'T' '{print $2}')
+          t1=$(date -d "${time1}" +%s)
+          CURRENTTIME1=$(date +%H:%M:%S)
+          t2=$(date -d "${CURRENTTIME1}" +%s)
+          DIFF1=$(expr $t2 - $t1)
+          currentdate1=$(date +%Y-%m-%d)
+
+          if [ "$date1" = "$currentdate1" ]; then
+              if [ "$DIFF1" -lt '12000' ]; then
+                  BLOCKERCOUNT1=$(curl -u mpatil:mp@123 'http://192.168.0.25:9000/api/issues/search?componentKeys='${PR_AUTHOR}'&branch='${{ github.head_ref }}'&resolved=false&severities=BLOCKER' | awk '{sub(/[^total]*/,"");sub(/ ,*/,"");print}' | cut -c 1-10 | grep -o '[0-9]*')
+                  BUGCOUNT1=$(curl -u mpatil:mp@123 'http://192.168.0.25:9000/api/issues/search?componentKeys='${PR_AUTHOR}'&branch='${{ github.head_ref }}'&resolved=false&types=BUG' | awk '{sub(/[^total]*/,"");sub(/ ,*/,"");print}' | cut -c 1-10 | grep -o '[0-9]*')
+                  VULNERABILITY1=$(curl -u mpatil:mp@123 'http://192.168.0.25:9000/api/issues/search?componentKeys='${PR_AUTHOR}'&branch='${{ github.head_ref }}'&resolved=false&types=VULNERABILITY' | awk '{sub(/[^total]*/,"");sub(/ ,*/,"");print}' | cut -c 1-10 | grep -o '[0-9]*')
+                  SECURITYHOTSPOT1=$(curl -u mpatil:mp@123 'http://192.168.0.25:9000/api/hotspots/search?projectKey='${PR_AUTHOR}'&branch='${{ github.head_ref }}'' | awk '{sub(/[^total]*/,"");sub(/ ,*/,"");print}' | awk -F"total" '{print $2}' | awk -F":" '{print $2}' | awk -F"}" '{print $1}')
+                  echo $BLOCKERCOUNT1
+                  if [ "$BLOCKERCOUNT1" = "0" ] && [ "$BUGCOUNT1" = "0" ] && [ "$SECURITYHOTSPOT1" = "0" ] && [ "$VULNERABILITY1" = "0" ]; then
+                      echo "No sonar issues"
+                      echo $BLOCKERCOUNT1 $BUGCOUNT1 $SECURITYHOTSPOT1 $VULNERABILITY1
+                      echo "Build=true" >> $GITHUB_ENV
+                  else
+                      echo "Sonar Failed"
+                      echo "Error: Build fail due to sonar issue BLOCKERCOUNT=$BLOCKERCOUNT1 BUGCOUNT=$BUGCOUNT1 VULNERABILITY=$VULNERABILITY1 SECURITYHOTSPOT=$SECURITYHOTSPOT1."
+                      exit 1
+                  fi
+              else
+                  echo "Last Build is not ran within 10 min"
+                  exit 1
+              fi
+          else
+              echo "Last Build is not ran today."
+              exit 1
+          fi
+
+      - name: Mark PR status based on Sonar result
+        run: |
+          if [[ "${{ env.Build }}" == "true" ]]; then
+            echo "Sonar scan passed. Marking PR as passed."
+            gh pr review ${{ github.event.pull_request.number }} --approve
+          else
+            echo "Sonar scan failed. Marking PR as rejected."
+            gh pr review ${{ github.event.pull_request.number }} --request-changes --body "Sonar scan failed due to blockers, bugs, vulnerabilities, or security hotspots."
+          fi
