@@ -1,15 +1,6 @@
 name: snyk-analysis
-on:
-
-#  repository_dispatch:
- #    type: [build]
-
-  workflow_dispatch:
-  push: 
-    branches: [main]
-    paths: [package.json]
-  pull_request:
-    branches: [main]
+on: 
+   workflow_dispatch:
 env:
      version: ${{ github.event.client_payload.version }}
 
