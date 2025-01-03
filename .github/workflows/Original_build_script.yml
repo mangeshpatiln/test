@@ -4,12 +4,7 @@ on:
 #  repository_dispatch:
 #     type: [test_result]
 
-  workflow_dispatch:
-  push: 
-    branches: [main]
-    paths: [package.json]
-  pull_request:
-    branches: [main]
+   workflow_dispatch:
 env:
      version: ${{ github.event.client_payload.version }}
 jobs:
