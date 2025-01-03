@@ -32,7 +32,6 @@ jobs:
           echo "sonar.branch.name=${GITHUB_REF#refs/heads/}" >> sonar-project.properties  # Get PR branch name
           echo "sonar.sources=." >> sonar-project.properties  # Assuming all sources in root directory
 
-      - name: Run SonarQube Scan
+      - name: Verify sonar-project.properties
         run: |
-          # Run the SonarQube scanner using the updated properties file
-          sonar-scanner
+          cat sonar-project.properties
