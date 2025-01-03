@@ -36,3 +36,4 @@ jobs:
       - name: Verify sonar-project.properties
         run: |
           cat sonar-project.properties
+          sonar-scanner
