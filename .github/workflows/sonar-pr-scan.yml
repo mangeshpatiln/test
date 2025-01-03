@@ -9,6 +9,11 @@ jobs:
     runs-on: self-hosted  # Runs on a self-hosted runner
 
     steps:
+      - name: Set up SonarQube Scanner
+        run: |
+          # Add the sonar-scanner directory to the PATH
+          echo "/opt/sonar-scanner/bin" >> $GITHUB_PATH
+
       - name: Checkout repository
         uses: actions/checkout@v3
 
