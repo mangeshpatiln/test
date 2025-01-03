@@ -24,3 +24,7 @@ jobs:
         run: |
           echo "sonar.projectKey=${PR_AUTHOR}" >> sonar-project.properties
 
+      - name: Run SonarQube Scan
+        run: |
+          sonar-scanner
+
