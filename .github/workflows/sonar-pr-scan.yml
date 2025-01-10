@@ -49,10 +49,10 @@ jobs:
           echo "Branch name: $BRANCH_NAME"
       
           # SonarQube analysis date and time extraction logic
-          date1=$(curl -s -u mpatil:mp@123 'http://192.168.0.25:9000/api/components/show?component='${PR_AUTHOR}'&branch='${BRANCH_NAME}'' | jq -r '.component.analysisDate' | awk -F'T' '{print $1}')
+          date1=$(curl -s -u ${{ secrets.SONAR_USERNAME }}:${{ secrets.SONAR_PASSWORD }} 'http://192.168.0.25:9000/api/components/show?component='${PR_AUTHOR}'&branch='${BRANCH_NAME}'' | jq -r '.component.analysisDate' | awk -F'T' '{print $1}')
           echo "Analysis date: $date1"
       
-          time1=$(curl -s -u mpatil:mp@123 'http://192.168.0.25:9000/api/components/show?component='${PR_AUTHOR}'&branch='${BRANCH_NAME}'' | jq -r '.component.analysisDate' | awk -F'T' '{print $2}' | awk -F'+' '{print $1}')
+          time1=$(curl -s -u ${{ secrets.SONAR_USERNAME }}:${{ secrets.SONAR_PASSWORD }} 'http://192.168.0.25:9000/api/components/show?component='${PR_AUTHOR}'&branch='${BRANCH_NAME}'' | jq -r '.component.analysisDate' | awk -F'T' '{print $2}' | awk -F'+' '{print $1}')
           echo "Analysis time: $time1"
       
           # Convert to timestamps
@@ -65,10 +65,10 @@ jobs:
           if [ "$date1" = "$currentdate1" ]; then
             if [ "$DIFF1" -lt '12000' ]; then
               # Check for blocker, bug, vulnerability, and security hotspot counts
-              BLOCKERCOUNT1=$(curl -s -u mpatil:mp@123 'http://192.168.0.25:9000/api/issues/search?componentKeys='${PR_AUTHOR}'&branch='${BRANCH_NAME}'&resolved=false&severities=BLOCKER' | jq '.total' || echo 0)
-              BUGCOUNT1=$(curl -s -u mpatil:mp@123 'http://192.168.0.25:9000/api/issues/search?componentKeys='${PR_AUTHOR}'&branch='${BRANCH_NAME}'&resolved=false&types=BUG' | jq '.total' || echo 0)
-              VULNERABILITY1=$(curl -s -u mpatil:mp@123 'http://192.168.0.25:9000/api/issues/search?componentKeys='${PR_AUTHOR}'&branch='${BRANCH_NAME}'&resolved=false&types=VULNERABILITY' | jq '.total' || echo 0)
-              SECURITYHOTSPOT1=$(curl -s -u mpatil:mp@123 'http://192.168.0.25:9000/api/hotspots/search?projectKey='${PR_AUTHOR}'&branch='${BRANCH_NAME}'' | jq '.total' || echo 0)
+              BLOCKERCOUNT1=$(curl -s -u ${{ secrets.SONAR_USERNAME }}:${{ secrets.SONAR_PASSWORD }} 'http://192.168.0.25:9000/api/issues/search?componentKeys='${PR_AUTHOR}'&branch='${BRANCH_NAME}'&resolved=false&severities=BLOCKER' | jq '.total' || echo 0)
+              BUGCOUNT1=$(curl -s -u ${{ secrets.SONAR_USERNAME }}:${{ secrets.SONAR_PASSWORD }} 'http://192.168.0.25:9000/api/issues/search?componentKeys='${PR_AUTHOR}'&branch='${BRANCH_NAME}'&resolved=false&types=BUG' | jq '.total' || echo 0)
+              VULNERABILITY1=$(curl -s -u ${{ secrets.SONAR_USERNAME }}:${{ secrets.SONAR_PASSWORD }} 'http://192.168.0.25:9000/api/issues/search?componentKeys='${PR_AUTHOR}'&branch='${BRANCH_NAME}'&resolved=false&types=VULNERABILITY' | jq '.total' || echo 0)
+              SECURITYHOTSPOT1=$(curl -s -u ${{ secrets.SONAR_USERNAME }}:${{ secrets.SONAR_PASSWORD }} 'http://192.168.0.25:9000/api/hotspots/search?projectKey='${PR_AUTHOR}'&branch='${BRANCH_NAME}'' | jq '.total' || echo 0)
       
               echo "BLOCKERCOUNT1=$BLOCKERCOUNT1"
               echo "BUGCOUNT1=$BUGCOUNT1"
