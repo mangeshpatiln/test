@@ -101,4 +101,15 @@ jobs:
           else
             echo "Sonar scan failed. Marking PR as rejected."
             gh pr review ${{ github.event.pull_request.number }} --request-changes --body "Sonar scan failed due to blockers, bugs, vulnerabilities, or security hotspots."
+
+            # Add custom comment with failure details to PR
+            gh pr comment ${{ github.event.pull_request.number }} --body "### SonarQube Scan Failed
+            The SonarQube scan failed due to the following issues:
+            - **Blockers**: $BLOCKERCOUNT1
+            - **Bugs**: $BUGCOUNT1
+            - **Vulnerabilities**: $VULNERABILITY1
+            - **Security Hotspots**: $SECURITYHOTSPOT1
+
+            Please fix the issues before requesting a re-review."
+
           fi
