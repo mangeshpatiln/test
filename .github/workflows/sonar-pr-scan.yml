@@ -94,7 +94,12 @@ jobs:
 
 
       - name: Mark PR status based on Sonar result
-        run: |
+        run: |          # Ensure GitHub CLI is authenticated
+          echo "GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
+
+          # Make sure gh is installed
+          gh --version
+
           if [[ "${{ env.Build }}" == "true" ]]; then
             echo "Sonar scan passed. Marking PR as passed."
             gh pr review ${{ github.event.pull_request.number }} --approve
@@ -111,5 +116,4 @@ jobs:
             - **Security Hotspots**: $SECURITYHOTSPOT1
 
             Please fix the issues before requesting a re-review."
-
           fi
