@@ -49,7 +49,7 @@ jobs:
           echo "Branch name: $BRANCH_NAME"
       
           # SonarQube analysis date and time extraction logic
-          date1=$(curl -s -u mpatil:mp@123 'http://192.168.0.25:9000/api/components/show?component='${PR_AUTHOR}'&branch='${BRANCH_NAME}'' | jq -r '.component.analysisDate' | awk -F'T' '{print $1}'")
+          date1=$(curl -s -u mpatil:mp@123 'http://192.168.0.25:9000/api/components/show?component='${PR_AUTHOR}'&branch='${BRANCH_NAME}'' | jq -r '.component.analysisDate' | awk -F'T' '{print $1}')
           echo "Analysis date: $date1"
       
           time1=$(curl -s -u mpatil:mp@123 'http://192.168.0.25:9000/api/components/show?component='${PR_AUTHOR}'&branch='${BRANCH_NAME}'' | jq -r '.component.analysisDate' | awk -F'T' '{print $2}' | awk -F'+' '{print $1}')
