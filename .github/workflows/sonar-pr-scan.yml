@@ -95,28 +95,29 @@ jobs:
           fi
       - name: Mark PR status based on SonarQube result
         run: |
-          echo "GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
-          gh --version
-
-          if [[ "${{ env.Build }}" == "true" ]]; then
-            gh pr review ${{ github.event.pull_request.number }} --approve
-          else
-            gh pr review ${{ github.event.pull_request.number }} --request-changes --body "Sonar scan failed due to unresolved issues."
-
-            COMMENT_BODY=$(cat <<EOF
-            ❌ **SonarQube Scan Failed**
-  
-            The scan reported the following issues:
-
-            - **Blockers**: ${{ env.BLOCKERCOUNT }}
-            - **Bugs**: ${{ env.BUGCOUNT }}
-            - **Vulnerabilities**: ${{ env.VULNERABILITYCOUNT }}
-            - **Security Hotspots**: ${{ env.SECURITYHOTSPOTCOUNT }}
-
-            Please resolve these issues before requesting another review.
-            EOF
-            )
-            gh pr comment ${{ github.event.pull_request.number }} --body "$COMMENT_BODY"
-          fi
-  
-
+              echo "GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
+              gh --version
+          
+              if [[ "${{ env.Build }}" == "true" ]]; then
+                gh pr review ${{ github.event.pull_request.number }} --approve
+              else
+                gh pr review ${{ github.event.pull_request.number }} --request-changes --body "Sonar scan failed due to unresolved issues."
+          
+                COMMENT_BODY=$(cat <<EOF
+               ❌ **SonarQube Scan Failed**
+          
+                The scan reported the following issues:
+          
+              - **Blockers**: ${BLOCKERCOUNT}
+              - **Bugs**: ${BUGCOUNT}
+              - **Vulnerabilities**: ${VULNERABILITYCOUNT}
+              - **Security Hotspots**: ${SECURITYHOTSPOTCOUNT}
+          
+              Please resolve these issues before requesting another review.
+              EOF
+              )
+                gh pr comment ${{ github.event.pull_request.number }} --body "$COMMENT_BODY"
+              fi
+          
+            
+          
