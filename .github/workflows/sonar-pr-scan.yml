@@ -97,27 +97,30 @@ jobs:
         run: |
               echo "GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
               gh --version
-          
-              if [[ "${{ env.Build }}" == "true" ]]; then
-                gh pr review ${{ github.event.pull_request.number }} --approve
-              else
-                gh pr review ${{ github.event.pull_request.number }} --request-changes --body "Sonar scan failed due to unresolved issues."
-          
-                COMMENT_BODY=$(cat <<EOF
-               ❌ **SonarQube Scan Failed**
-          
-                The scan reported the following issues:
-          
+                      
+              COMMENT_BODY=$(cat <<EOF
+              ${{ env.Build == 'true' && ':white_check_mark: **SonarQube Scan Passed**' || ':x: **SonarQube Scan Failed**' }}
+              
+              The scan reported the following issues:
+              
               - **Blockers**: ${BLOCKERCOUNT}
               - **Bugs**: ${BUGCOUNT}
               - **Vulnerabilities**: ${VULNERABILITYCOUNT}
               - **Security Hotspots**: ${SECURITYHOTSPOTCOUNT}
-          
-              Please resolve these issues before requesting another review.
+              
+              ${{ env.Build == 'false' && 'Please resolve these issues before requesting another review.' || '' }}
               EOF
               )
+              
+              # Try to find existing comment by the bot
+              EXISTING_COMMENT_ID=$(gh pr view ${{ github.event.pull_request.number }} --comments --json comments \
+                | jq '.comments[] | select(.author.login == "github-actions[bot]") | select(.body | contains("SonarQube Scan")) | .id' \
+                | tail -n1)
+              
+              if [[ -n "$EXISTING_COMMENT_ID" ]]; then
+                # Update the existing comment
+                gh pr comment ${{ github.event.pull_request.number }} --edit "$EXISTING_COMMENT_ID" --body "$COMMENT_BODY"
+              else
+                # Create a new comment
                 gh pr comment ${{ github.event.pull_request.number }} --body "$COMMENT_BODY"
               fi
-          
-            
-          
