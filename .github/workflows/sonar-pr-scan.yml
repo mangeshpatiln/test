@@ -84,19 +84,17 @@ jobs:
             exit 1
           fi
 
-      - name: Mark PR status based on SonarQube result
+          - name: Mark PR status based on SonarQube result
         run: |
           echo "GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
           gh --version
 
           if [[ "${{ env.Build }}" == "true" ]]; then
-            echo "Sonar scan passed. Approving PR."
             gh pr review ${{ github.event.pull_request.number }} --approve
           else
-            echo "Sonar scan failed. Requesting changes."
             gh pr review ${{ github.event.pull_request.number }} --request-changes --body "Sonar scan failed due to unresolved issues."
 
-            gh pr comment ${{ github.event.pull_request.number }} --body "$(cat <<EOF
+            COMMENT_BODY=$(cat <<EOF
 ❌ **SonarQube Scan Failed**
 
 The scan reported the following issues:
@@ -108,4 +106,7 @@ The scan reported the following issues:
 
 Please resolve these issues before requesting another review.
 EOF
-)"
+)
+            gh pr comment ${{ github.event.pull_request.number }} --body "$COMMENT_BODY"
+          fi
+  
