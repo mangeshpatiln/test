@@ -2,15 +2,15 @@ name: SonarQube PR Scan
 
 on:
   pull_request:
-    types: [opened, reopened]  
+    types: [opened, reopened]
 
 jobs:
   sonar_scan:
     runs-on: [self-hosted, Sonar-Scan-26.101]
+
     steps:
       - name: Set up SonarQube Scanner
         run: |
-          # Add the sonar-scanner directory to the PATH
           echo "/opt/sonar-scanner/bin" >> $GITHUB_PATH
 
       - name: Checkout repository
@@ -20,99 +20,92 @@ jobs:
         id: pr_author
         run: |
           PR_AUTHOR=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-              https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }} | \
-              jq -r .user.login)
-          echo "PR_AUTHOR=${PR_AUTHOR}" >> $GITHUB_ENV
+            https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }} | \
+            jq -r .user.login)
+          echo "PR_AUTHOR=$PR_AUTHOR" >> $GITHUB_ENV
 
       - name: Update SonarQube properties file
         run: |
-          echo "sonar.projectKey=${PR_AUTHOR}" >> sonar-project.properties
+          echo "sonar.projectKey=${PR_AUTHOR}" > sonar-project.properties
           echo "sonar.branch.name=${{ github.head_ref }}" >> sonar-project.properties
           echo "sonar.sources=." >> sonar-project.properties
           echo "sonar.host.url=http://192.168.0.25:9000" >> sonar-project.properties
           echo "sonar.login=${{ secrets.SONAR_TOKEN }}" >> sonar-project.properties
 
-      - name: Verify sonar-project.properties
+      - name: Verify and run SonarQube Scanner
         run: |
           cat sonar-project.properties
           sonar-scanner
 
       - name: Wait for SonarQube scan result (1 minute)
-        run: |
-          sleep 60
+        run: sleep 60
 
       - name: Check SonarQube scan result
+        id: scan_check
         run: |
-          # Extract the branch name (assume it's the same as PR branch)
-          BRANCH_NAME=${{ github.head_ref }}
+          BRANCH_NAME="${{ github.head_ref }}"
           echo "Branch name: $BRANCH_NAME"
-      
-          # SonarQube analysis date and time extraction logic
-          date1=$(curl -s -u ${{ secrets.SONAR_USERNAME }}:${{ secrets.SONAR_PASSWORD }} 'http://192.168.0.25:9000/api/components/show?component='${PR_AUTHOR}'&branch='${BRANCH_NAME}'' | jq -r '.component.analysisDate' | awk -F'T' '{print $1}')
-          echo "Analysis date: $date1"
-      
-          time1=$(curl -s -u ${{ secrets.SONAR_USERNAME }}:${{ secrets.SONAR_PASSWORD }} 'http://192.168.0.25:9000/api/components/show?component='${PR_AUTHOR}'&branch='${BRANCH_NAME}'' | jq -r '.component.analysisDate' | awk -F'T' '{print $2}' | awk -F'+' '{print $1}')
-          echo "Analysis time: $time1"
-      
-          # Convert to timestamps
-          t1=$(date -d "${time1}" +%s || echo 0)
-          CURRENTTIME1=$(date +%H:%M:%S)
-          t2=$(date -d "${CURRENTTIME1}" +%s)
-          DIFF1=$(expr $t2 - $t1)
-          currentdate1=$(date +%Y-%m-%d)
-      
-          if [ "$date1" = "$currentdate1" ]; then
-            if [ "$DIFF1" -lt '12000' ]; then
-              # Check for blocker, bug, vulnerability, and security hotspot counts
-              BLOCKERCOUNT1=$(curl -s -u ${{ secrets.SONAR_USERNAME }}:${{ secrets.SONAR_PASSWORD }} 'http://192.168.0.25:9000/api/issues/search?componentKeys='${PR_AUTHOR}'&branch='${BRANCH_NAME}'&resolved=false&severities=BLOCKER' | jq '.total' || echo 0)
-              BUGCOUNT1=$(curl -s -u ${{ secrets.SONAR_USERNAME }}:${{ secrets.SONAR_PASSWORD }} 'http://192.168.0.25:9000/api/issues/search?componentKeys='${PR_AUTHOR}'&branch='${BRANCH_NAME}'&resolved=false&types=BUG' | jq '.total' || echo 0)
-              VULNERABILITY1=$(curl -s -u ${{ secrets.SONAR_USERNAME }}:${{ secrets.SONAR_PASSWORD }} 'http://192.168.0.25:9000/api/issues/search?componentKeys='${PR_AUTHOR}'&branch='${BRANCH_NAME}'&resolved=false&types=VULNERABILITY' | jq '.total' || echo 0)
-              SECURITYHOTSPOT1=$(curl -s -u ${{ secrets.SONAR_USERNAME }}:${{ secrets.SONAR_PASSWORD }} 'http://192.168.0.25:9000/api/hotspots/search?projectKey='${PR_AUTHOR}'&branch='${BRANCH_NAME}'' | jq '.total' || echo 0)
-      
-              echo "BLOCKERCOUNT1=$BLOCKERCOUNT1"
-              echo "BUGCOUNT1=$BUGCOUNT1"
-              echo "VULNERABILITY1=$VULNERABILITY1"
-              echo "SECURITYHOTSPOT1=$SECURITYHOTSPOT1"
-      
-              if [ "$BLOCKERCOUNT1" -eq 0 ] && [ "$BUGCOUNT1" -eq 0 ] && [ "$VULNERABILITY1" -eq 0 ] && [ "$SECURITYHOTSPOT1" -eq 0 ]; then
-                echo "No Sonar issues"
-                echo "Build=true" >> $GITHUB_ENV
-              else
-                echo "Sonar scan failed"
-                echo "BLOCKERCOUNT=$BLOCKERCOUNT1, BUGCOUNT=$BUGCOUNT1, VULNERABILITY=$VULNERABILITY1, SECURITYHOTSPOT=$SECURITYHOTSPOT1"
-                exit 1
-              fi
+
+          ANALYSIS_DATE=$(curl -s -u ${{ secrets.SONAR_USERNAME }}:${{ secrets.SONAR_PASSWORD }} \
+            "http://192.168.0.25:9000/api/components/show?component=${PR_AUTHOR}&branch=${BRANCH_NAME}" | jq -r '.component.analysisDate')
+
+          DATE_ONLY=$(echo "$ANALYSIS_DATE" | awk -F'T' '{print $1}')
+          TIME_ONLY=$(echo "$ANALYSIS_DATE" | awk -F'T' '{print $2}' | awk -F'+' '{print $1}')
+
+          t1=$(date -d "${TIME_ONLY}" +%s || echo 0)
+          t2=$(date +%s)
+          DIFF=$((t2 - t1))
+          TODAY=$(date +%Y-%m-%d)
+
+          if [ "$DATE_ONLY" = "$TODAY" ] && [ "$DIFF" -lt 12000 ]; then
+            BLOCKERCOUNT=$(curl -s -u ${{ secrets.SONAR_USERNAME }}:${{ secrets.SONAR_PASSWORD }} \
+              "http://192.168.0.25:9000/api/issues/search?componentKeys=${PR_AUTHOR}&branch=${BRANCH_NAME}&resolved=false&severities=BLOCKER" | jq '.total')
+            BUGCOUNT=$(curl -s -u ${{ secrets.SONAR_USERNAME }}:${{ secrets.SONAR_PASSWORD }} \
+              "http://192.168.0.25:9000/api/issues/search?componentKeys=${PR_AUTHOR}&branch=${BRANCH_NAME}&resolved=false&types=BUG" | jq '.total')
+            VULNCOUNT=$(curl -s -u ${{ secrets.SONAR_USERNAME }}:${{ secrets.SONAR_PASSWORD }} \
+              "http://192.168.0.25:9000/api/issues/search?componentKeys=${PR_AUTHOR}&branch=${BRANCH_NAME}&resolved=false&types=VULNERABILITY" | jq '.total')
+            HOTSPOTCOUNT=$(curl -s -u ${{ secrets.SONAR_USERNAME }}:${{ secrets.SONAR_PASSWORD }} \
+              "http://192.168.0.25:9000/api/hotspots/search?projectKey=${PR_AUTHOR}&branch=${BRANCH_NAME}" | jq '.total')
+
+            echo "BLOCKERCOUNT=$BLOCKERCOUNT" >> $GITHUB_ENV
+            echo "BUGCOUNT=$BUGCOUNT" >> $GITHUB_ENV
+            echo "VULNERABILITYCOUNT=$VULNCOUNT" >> $GITHUB_ENV
+            echo "SECURITYHOTSPOTCOUNT=$HOTSPOTCOUNT" >> $GITHUB_ENV
+
+            if [ "$BLOCKERCOUNT" -eq 0 ] && [ "$BUGCOUNT" -eq 0 ] && [ "$VULNCOUNT" -eq 0 ] && [ "$HOTSPOTCOUNT" -eq 0 ]; then
+              echo "Build=true" >> $GITHUB_ENV
             else
-              echo "Last Build is not ran within 10 minutes"
+              echo "Build=false" >> $GITHUB_ENV
               exit 1
             fi
           else
-            echo "Last Build is not ran today."
+            echo "Build=false" >> $GITHUB_ENV
+            echo "Sonar scan not recent or not today."
             exit 1
           fi
 
-
-      - name: Mark PR status based on Sonar result
-        run: |          # Ensure GitHub CLI is authenticated
+      - name: Mark PR status based on SonarQube result
+        run: |
           echo "GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
-
-          # Make sure gh is installed
           gh --version
 
           if [[ "${{ env.Build }}" == "true" ]]; then
-            echo "Sonar scan passed. Marking PR as passed."
+            echo "Sonar scan passed. Approving PR."
             gh pr review ${{ github.event.pull_request.number }} --approve
           else
-            echo "Sonar scan failed. Marking PR as rejected."
-            gh pr review ${{ github.event.pull_request.number }} --request-changes --body "Sonar scan failed due to blockers, bugs, vulnerabilities, or security hotspots."
+            echo "Sonar scan failed. Requesting changes."
+            gh pr review ${{ github.event.pull_request.number }} --request-changes --body "Sonar scan failed due to unresolved issues."
 
-            
-            gh pr comment ${{ github.event.pull_request.number }} --body 
-            The SonarQube scan failed due to the following issues:
-            - **Blockers**: $BLOCKERCOUNT1
-            - **Bugs**: $BUGCOUNT1
-            - **Vulnerabilities**: $VULNERABILITY1
-            - **Security Hotspots**: $SECURITYHOTSPOT1
+            gh pr comment ${{ github.event.pull_request.number }} --body "$(cat <<EOF
+❌ **SonarQube Scan Failed**
 
-            Please fix the issues before requesting a re-review."
-          fi
+The scan reported the following issues:
+
+- **Blockers**: ${{ env.BLOCKERCOUNT }}
+- **Bugs**: ${{ env.BUGCOUNT }}
+- **Vulnerabilities**: ${{ env.VULNERABILITYCOUNT }}
+- **Security Hotspots**: ${{ env.SECURITYHOTSPOTCOUNT }}
+
+Please resolve these issues before requesting another review.
+EOF
+)"
