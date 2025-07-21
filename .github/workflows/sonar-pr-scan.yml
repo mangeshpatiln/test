@@ -69,7 +69,13 @@ jobs:
             BUGCOUNT=${BUGCOUNT:-0}
             VULNCOUNT=${VULNCOUNT:-0}
             HOTSPOTCOUNT=${HOTSPOTCOUNT:-0}
-    
+            
+            re='^[0-9]+$'
+            [[ $BLOCKERCOUNT =~ $re ]] || BLOCKERCOUNT=0
+            [[ $BUGCOUNT =~ $re ]] || BUGCOUNT=0
+            [[ $VULNCOUNT =~ $re ]] || VULNCOUNT=0
+            [[ $HOTSPOTCOUNT =~ $re ]] || HOTSPOTCOUNT=0
+            
             echo "BLOCKERCOUNT=$BLOCKERCOUNT" >> $GITHUB_ENV
             echo "BUGCOUNT=$BUGCOUNT" >> $GITHUB_ENV
             echo "VULNERABILITYCOUNT=$VULNCOUNT" >> $GITHUB_ENV
