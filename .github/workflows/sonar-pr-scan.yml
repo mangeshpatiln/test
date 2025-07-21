@@ -6,7 +6,7 @@ on:
 
 jobs:
   sonar_scan:
-    runs-on: [self-hosted, Sonar-Scan-26.101]
+    runs-on: [self-hosted, SonarScan]
 
     steps:
       - name: Set up SonarQube Scanner
