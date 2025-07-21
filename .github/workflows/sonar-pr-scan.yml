@@ -23,15 +23,3 @@ jobs:
             https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }} | \
             jq -r .user.login)
           echo "PR_AUTHOR=$PR_AUTHOR" >> $GITHUB_ENV
-      - name: Update SonarQube properties file
-        run: |
-          echo "sonar.projectKey=${PR_AUTHOR}" > sonar-project.properties
-          echo "sonar.branch.name=${{ github.head_ref }}" >> sonar-project.properties
-          echo "sonar.sources=." >> sonar-project.properties
-          echo "sonar.host.url=http://192.168.0.25:9000" >> sonar-project.properties
-          echo "sonar.login=${{ secrets.SONAR_TOKEN }}" >> sonar-project.properties
-
-      - name: Verify and run SonarQube Scanner
-        run: |
-          cat sonar-project.properties
-          sonar-scanner
