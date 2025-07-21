@@ -97,15 +97,13 @@ jobs:
             gh pr review ${{ github.event.pull_request.number }} --request-changes --body "Sonar scan failed due to unresolved issues."
 
             gh pr comment ${{ github.event.pull_request.number }} --body "$(cat <<EOF
-❌ **SonarQube Scan Failed**
+              ❌ **SonarQube Scan Failed**
+              The scan reported the following issues:
+              - **Blockers**: ${{ env.BLOCKERCOUNT }}
+              - **Bugs**: ${{ env.BUGCOUNT }}
+              - **Vulnerabilities**: ${{ env.VULNERABILITYCOUNT }}
+              - **Security Hotspots**: ${{ env.SECURITYHOTSPOTCOUNT }}
 
-The scan reported the following issues:
-
-- **Blockers**: ${{ env.BLOCKERCOUNT }}
-- **Bugs**: ${{ env.BUGCOUNT }}
-- **Vulnerabilities**: ${{ env.VULNERABILITYCOUNT }}
-- **Security Hotspots**: ${{ env.SECURITYHOTSPOTCOUNT }}
-
-Please resolve these issues before requesting another review.
-EOF
-)"
+              Please resolve these issues before requesting another review.
+              EOF
+              )"
