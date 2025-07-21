@@ -65,10 +65,16 @@ jobs:
             HOTSPOTCOUNT=$(curl -s -u ${{ secrets.SONAR_USERNAME }}:${{ secrets.SONAR_PASSWORD }} \
               "http://192.168.0.25:9000/api/hotspots/search?projectKey=${PR_AUTHOR}&branch=${BRANCH_NAME}" | jq '.total')
 
+            BLOCKERCOUNT=${BLOCKERCOUNT:-0}
+            BUGCOUNT=${BUGCOUNT:-0}
+            VULNCOUNT=${VULNCOUNT:-0}
+            HOTSPOTCOUNT=${HOTSPOTCOUNT:-0}
+    
             echo "BLOCKERCOUNT=$BLOCKERCOUNT" >> $GITHUB_ENV
             echo "BUGCOUNT=$BUGCOUNT" >> $GITHUB_ENV
             echo "VULNERABILITYCOUNT=$VULNCOUNT" >> $GITHUB_ENV
             echo "SECURITYHOTSPOTCOUNT=$HOTSPOTCOUNT" >> $GITHUB_ENV
+            echo "BLOCKER: $BLOCKERCOUNT, BUG: $BUGCOUNT, VULNERABILITY: $VULNCOUNT, HOTSPOT: $HOTSPOTCOUNT"
 
             if [ "$BLOCKERCOUNT" -eq 0 ] && [ "$BUGCOUNT" -eq 0 ] && [ "$VULNCOUNT" -eq 0 ] && [ "$HOTSPOTCOUNT" -eq 0 ]; then
               echo "Build=true" >> $GITHUB_ENV
