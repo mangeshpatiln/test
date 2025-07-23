@@ -6,7 +6,7 @@ on:
 
 jobs:
   sonar_scan:
-    runs-on: [self-hosted, SonarScan]
+    runs-on: [self-hosted, NewSonarScan]
 
     steps:
       - name: Set up SonarQube Scanner
@@ -15,6 +15,8 @@ jobs:
 
       - name: Checkout repository
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
       - name: Get PR author name
         id: pr_author
@@ -30,6 +32,7 @@ jobs:
           echo "sonar.sources=." >> sonar-project.properties
           echo "sonar.host.url=http://192.168.0.25:9000" >> sonar-project.properties
           echo "sonar.login=${{ secrets.SONAR_TOKEN }}" >> sonar-project.properties
+          echo "sonar.exclusions=keys/**/*,.idea,reports/**/*,samplefiles/**/*,scripts/**/*,swagger/**/*,uploads/**/*,views/**/*,migrations/**/*,templates/**/*,ecosystem.config.js,**/*.test.js,__tests__/**/*.test.js,**/__tests__/**/*" >> sonar-project.properties
 
       - name: Verify and run SonarQube Scanner
         run: |
@@ -58,8 +61,6 @@ jobs:
               sleep 10
             fi
           done
-
-
       - name: Check SonarQube scan result
         id: scan_check
         run: |
@@ -69,35 +70,42 @@ jobs:
           ANALYSIS_DATE=$(curl -s -u ${{ secrets.SONAR_USERNAME }}:${{ secrets.SONAR_PASSWORD }} \
             "http://192.168.0.25:9000/api/components/show?component=${PR_AUTHOR}&branch=${BRANCH_NAME}" | jq -r '.component.analysisDate')
 
-          DATE_ONLY=$(echo "$ANALYSIS_DATE" | awk -F'T' '{print $1}')
-          TIME_ONLY=$(echo "$ANALYSIS_DATE" | awk -F'T' '{print $2}' | awk -F'+' '{print $1}')
+          echo "Raw analysis date (UTC format from SonarQube): $ANALYSIS_DATE"
 
-          t1=$(date -d "${TIME_ONLY}" +%s || echo 0)
-          t2=$(date +%s)
-          DIFF=$((t2 - t1))
-          TODAY=$(date +%Y-%m-%d)
+          # Convert analysis date to epoch (UTC)
+          ANALYSIS_EPOCH=$(date -u -d "$ANALYSIS_DATE" +%s || echo 0)
 
-          if [ "$DATE_ONLY" = "$TODAY" ] && [ "$DIFF" -lt 12000 ]; then
+          # Get current UTC time
+          CURRENT_EPOCH=$(date -u +%s)
+
+          # Get time difference in seconds
+          DIFF=$((CURRENT_EPOCH - ANALYSIS_EPOCH))
+
+          # Extract UTC date from analysis time
+          ANALYSIS_DATE_ONLY=$(date -u -d "$ANALYSIS_DATE" +%Y-%m-%d)
+          TODAY_UTC=$(date -u +%Y-%m-%d)
+
+          echo "Analysis UTC date: $ANALYSIS_DATE_ONLY"
+          echo "Today's UTC date: $TODAY_UTC"
+          echo "Time diff (sec): $DIFF"
+
+          if [ "$ANALYSIS_DATE_ONLY" = "$TODAY_UTC" ] && [ "$DIFF" -lt 3600 ]; then
+            echo "Recent scan found. Fetching issue counts..."
+
             BLOCKERCOUNT=$(curl -s -u ${{ secrets.SONAR_USERNAME }}:${{ secrets.SONAR_PASSWORD }} \
-              "http://192.168.0.25:9000/api/issues/search?componentKeys=${PR_AUTHOR}&branch=${BRANCH_NAME}&resolved=false&severities=BLOCKER" | jq '.total')
+              "http://192.168.0.25:9000/api/issues/search?componentKeys=${PR_AUTHOR}&branch=${BRANCH_NAME}&resolved=false&severities=BLOCKER" | jq '.total // 0')
             BUGCOUNT=$(curl -s -u ${{ secrets.SONAR_USERNAME }}:${{ secrets.SONAR_PASSWORD }} \
-              "http://192.168.0.25:9000/api/issues/search?componentKeys=${PR_AUTHOR}&branch=${BRANCH_NAME}&resolved=false&types=BUG" | jq '.total')
+              "http://192.168.0.25:9000/api/issues/search?componentKeys=${PR_AUTHOR}&branch=${BRANCH_NAME}&resolved=false&types=BUG" | jq '.total // 0')
             VULNCOUNT=$(curl -s -u ${{ secrets.SONAR_USERNAME }}:${{ secrets.SONAR_PASSWORD }} \
-              "http://192.168.0.25:9000/api/issues/search?componentKeys=${PR_AUTHOR}&branch=${BRANCH_NAME}&resolved=false&types=VULNERABILITY" | jq '.total')
+              "http://192.168.0.25:9000/api/issues/search?componentKeys=${PR_AUTHOR}&branch=${BRANCH_NAME}&resolved=false&types=VULNERABILITY" | jq '.total // 0')
             HOTSPOTCOUNT=$(curl -s -u ${{ secrets.SONAR_USERNAME }}:${{ secrets.SONAR_PASSWORD }} \
-              "http://192.168.0.25:9000/api/hotspots/search?projectKey=${PR_AUTHOR}&branch=${BRANCH_NAME}" | jq '.total')
+              "http://192.168.0.25:9000/api/hotspots/search?projectKey=${PR_AUTHOR}&branch=${BRANCH_NAME}" | jq '.total // 0')
 
             BLOCKERCOUNT=${BLOCKERCOUNT:-0}
             BUGCOUNT=${BUGCOUNT:-0}
             VULNCOUNT=${VULNCOUNT:-0}
             HOTSPOTCOUNT=${HOTSPOTCOUNT:-0}
-            
-            re='^[0-9]+$'
-            [[ $BLOCKERCOUNT =~ $re ]] || BLOCKERCOUNT=0
-            [[ $BUGCOUNT =~ $re ]] || BUGCOUNT=0
-            [[ $VULNCOUNT =~ $re ]] || VULNCOUNT=0
-            [[ $HOTSPOTCOUNT =~ $re ]] || HOTSPOTCOUNT=0
-            
+
             echo "BLOCKERCOUNT=$BLOCKERCOUNT" >> $GITHUB_ENV
             echo "BUGCOUNT=$BUGCOUNT" >> $GITHUB_ENV
             echo "VULNERABILITYCOUNT=$VULNCOUNT" >> $GITHUB_ENV
@@ -115,6 +123,7 @@ jobs:
             echo "Sonar scan not recent or not today."
             exit 1
           fi
+
       - name: Mark PR status based on SonarQube result
         run: |
               echo "GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
