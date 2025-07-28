@@ -1,0 +1,35 @@
+name: Deploy On Merge
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: [self-hosted, integration-dataseers-ai]
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Prepare Deployment Tag
+      id: prep
+      run: |
+        COMMIT_ID=$(echo ${{ github.sha }} | cut -c1-7)
+        DATE_TAG=$(date +%m-%d-%y-%H-%M-%S)
+        DEPLOY_TAG="${COMMIT_ID}_${DATE_TAG}"
+        echo "DEPLOY_TAG=${DEPLOY_TAG}" >> $GITHUB_ENV
+
+    - name: Deploy
+      env:
+        DEPLOYMENT_DIR: /home/seerportal
+      run: |
+        DEPLOY_FOLDER="${DEPLOYMENT_DIR}/${{ env.DEPLOY_TAG }}"
+        mkdir -p "$DEPLOY_FOLDER"
+        rsync -a $GITHUB_WORKSPACE/ "$DEPLOY_FOLDER"
+        cd "${DEPLOYMENT_DIR}"
+        if [[ $(pwd) != "$DEPLOYMENT_DIR" ]]; then
+            echo "Please run in $DEPLOYMENT_DIR"
+            exit 1
+        fi
+        ./action_pipeline_deployer.sh "${{ env.DEPLOY_TAG }}"
+      shell: bash
