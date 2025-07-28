@@ -5,7 +5,7 @@ on:
 
 jobs:
   deploy:
-    runs-on: [self-hosted, integration-dataseers-ai]
+    runs-on: [self-hosted, dev-sp]
 
     steps:
     - name: Checkout repository
