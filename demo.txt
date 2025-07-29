@@ -1,57 +1,28 @@
-// vulnerable.js
+// auth.js
 
-const http = require('http');
-const fs = require('fs');
-const url = require('url');
+class AuthService {
+    constructor() {
+        // Security Hotspot: Hardcoded credentials
+        this.credentials = {
+            username: "admin",
+            password: "SuperSecret123!"  // <-- This will be flagged by Sonar
+        };
+    }
 
-// Bug: Hardcoded credentials (Security Hotspot)
-const adminUsername = 'admin';
-const adminPassword = 'password123'; 
-
-// Bug: Insecure HTTP server (Security Hotspot)
-http.createServer(function (req, res) {
-    const q = url.parse(req.url, true);
-    const filename = "." + q.pathname;
-
-    // Code Smell: Console log in production
-    console.log("Requested file: " + filename);
-
-    // Bug: Unsanitized file path (Directory Traversal)
-    fs.readFile(filename, function(err, data) {
-        if (err) {
-            res.writeHead(404, {'Content-Type': 'text/html'});
-            return res.end("404 Not Found");
-        }
-
-        // Bug: Sending raw HTML without sanitization (XSS Risk)
-        res.writeHead(200, {'Content-Type': 'text/html'});
-        res.write(data);
-        return res.end();
-    });
-}).listen(8080);
-
-// Bug: Unused variable
-let unusedVariable = 42;
-
-// Code Smell: Use of var instead of let/const
-var insecureFlag = true;
-
-// Bug: Eval usage (Security Hotspot)
-function evaluateExpression(expression) {
-    return eval(expression);  // dangerous!
-}
-
-// Bug: Function with high cognitive complexity
-function complicatedFunction(a, b, c) {
-    if (a > b) {
-        if (b > c) {
-            if (c > a) {
-                console.log("Complex logic");
-            }
+    login(inputUsername, inputPassword) {
+        if (
+            inputUsername === this.credentials.username &&
+            inputPassword === this.credentials.password
+        ) {
+            console.log("Login successful!");
+            return true;
+        } else {
+            console.log("Login failed.");
+            return false;
         }
     }
 }
 
-// Call dangerous function
-evaluateExpression("console.log('This is risky')");
-
+// Example usage
+const auth = new AuthService();
+auth.login("admin", "SuperSecret123!");
