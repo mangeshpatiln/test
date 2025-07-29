@@ -44,7 +44,7 @@ jobs:
           TASK_ID=$(grep -oP '(?<=ceTaskId=)[^&]+' .scannerwork/report-task.txt)
           echo "SonarQube Task ID: $TASK_ID"
       
-          for i in {1..30}; do
+          for i in {1..60}; do
             STATUS=$(curl -s -u ${{ secrets.SONAR_USERNAME }}:${{ secrets.SONAR_PASSWORD }} \
               "http://192.168.0.25:9000/api/ce/task?id=$TASK_ID" | jq -r '.task.status')
             
@@ -61,28 +61,37 @@ jobs:
               sleep 10
             fi
           done
-# Modify: Check SonarQube scan result
       - name: Check SonarQube scan result
         id: scan_check
         run: |
           BRANCH_NAME="${{ github.head_ref }}"
           echo "Branch name: $BRANCH_NAME"
+
           ANALYSIS_DATE=$(curl -s -u ${{ secrets.SONAR_USERNAME }}:${{ secrets.SONAR_PASSWORD }} \
             "http://192.168.0.25:9000/api/components/show?component=${PR_AUTHOR}&branch=${BRANCH_NAME}" | jq -r '.component.analysisDate')
+
           echo "Raw analysis date (UTC format from SonarQube): $ANALYSIS_DATE"
-          
+
+          # Convert analysis date to epoch (UTC)
           ANALYSIS_EPOCH=$(date -u -d "$ANALYSIS_DATE" +%s || echo 0)
+
+          # Get current UTC time
           CURRENT_EPOCH=$(date -u +%s)
+
+          # Get time difference in seconds
           DIFF=$((CURRENT_EPOCH - ANALYSIS_EPOCH))
+
+          # Extract UTC date from analysis time
           ANALYSIS_DATE_ONLY=$(date -u -d "$ANALYSIS_DATE" +%Y-%m-%d)
           TODAY_UTC=$(date -u +%Y-%m-%d)
-          
+
           echo "Analysis UTC date: $ANALYSIS_DATE_ONLY"
           echo "Today's UTC date: $TODAY_UTC"
           echo "Time diff (sec): $DIFF"
-          
+
           if [ "$ANALYSIS_DATE_ONLY" = "$TODAY_UTC" ] && [ "$DIFF" -lt 3600 ]; then
             echo "Recent scan found. Fetching issue counts..."
+
             BLOCKERCOUNT=$(curl -s -u ${{ secrets.SONAR_USERNAME }}:${{ secrets.SONAR_PASSWORD }} \
               "http://192.168.0.25:9000/api/issues/search?componentKeys=${PR_AUTHOR}&branch=${BRANCH_NAME}&resolved=false&severities=BLOCKER" | jq '.total // 0')
             BUGCOUNT=$(curl -s -u ${{ secrets.SONAR_USERNAME }}:${{ secrets.SONAR_PASSWORD }} \
@@ -91,51 +100,59 @@ jobs:
               "http://192.168.0.25:9000/api/issues/search?componentKeys=${PR_AUTHOR}&branch=${BRANCH_NAME}&resolved=false&types=VULNERABILITY" | jq '.total // 0')
             HOTSPOTCOUNT=$(curl -s -u ${{ secrets.SONAR_USERNAME }}:${{ secrets.SONAR_PASSWORD }} \
               "http://192.168.0.25:9000/api/hotspots/search?projectKey=${PR_AUTHOR}&branch=${BRANCH_NAME}" | jq '.total // 0')
-            
+
+            BLOCKERCOUNT=${BLOCKERCOUNT:-0}
+            BUGCOUNT=${BUGCOUNT:-0}
+            VULNCOUNT=${VULNCOUNT:-0}
+            HOTSPOTCOUNT=${HOTSPOTCOUNT:-0}
+
             echo "BLOCKERCOUNT=$BLOCKERCOUNT" >> $GITHUB_ENV
             echo "BUGCOUNT=$BUGCOUNT" >> $GITHUB_ENV
             echo "VULNERABILITYCOUNT=$VULNCOUNT" >> $GITHUB_ENV
             echo "SECURITYHOTSPOTCOUNT=$HOTSPOTCOUNT" >> $GITHUB_ENV
-      
+            echo "BLOCKER: $BLOCKERCOUNT, BUG: $BUGCOUNT, VULNERABILITY: $VULNCOUNT, HOTSPOT: $HOTSPOTCOUNT"
+
             if [ "$BLOCKERCOUNT" -eq 0 ] && [ "$BUGCOUNT" -eq 0 ] && [ "$VULNCOUNT" -eq 0 ] && [ "$HOTSPOTCOUNT" -eq 0 ]; then
               echo "BuildResult=pass" >> $GITHUB_ENV
             else
               echo "BuildResult=fail" >> $GITHUB_ENV
             fi
-          else
+          else    
             echo "Sonar scan not recent or not today."
             echo "BuildResult=fail" >> $GITHUB_ENV
           fi
+
       - name: Mark PR status based on SonarQube result
-        if: always()
         run: |
-          echo "GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
-          gh --version
-      
-          COMMENT_BODY=$(cat <<EOF
-          ${{ env.BuildResult == 'pass' && ':white_check_mark: **SonarQube Scan Passed**' || ':x: **SonarQube Scan Failed**' }}
-      
-            The scan reported the following issues:
-            
-            - **Blockers**: ${BLOCKERCOUNT}
-            - **Bugs**: ${BUGCOUNT}
-            - **Vulnerabilities**: ${VULNERABILITYCOUNT}
-            - **Security Hotspots**: ${SECURITYHOTSPOTCOUNT}
-            
-            ${{ env.BuildResult == 'fail' && 'Please resolve these issues before requesting another review.' || '' }}
-            EOF
-            )
-            
-                EXISTING_COMMENT_ID=$(gh pr view ${{ github.event.pull_request.number }} --comments --json comments \
-                  | jq '.comments[] | select(.author.login == "github-actions[bot]") | select(.body | contains("SonarQube Scan")) | .id' \
-                  | tail -n1)
-            
-                if [[ -n "$EXISTING_COMMENT_ID" ]]; then
-                  gh pr comment ${{ github.event.pull_request.number }} --edit "$EXISTING_COMMENT_ID" --body "$COMMENT_BODY"
-                else
-                  gh pr comment ${{ github.event.pull_request.number }} --body "$COMMENT_BODY"
-                fi
+              echo "GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
+              gh --version
+                      
+              COMMENT_BODY=$(cat <<EOF
+              ${{ env.Build == 'true' && ':white_check_mark: **SonarQube Scan Passed**' || ':x: **SonarQube Scan Failed**' }}
+              
+              The scan reported the following issues:
+              
+              - **Blockers**: ${BLOCKERCOUNT}
+              - **Bugs**: ${BUGCOUNT}
+              - **Vulnerabilities**: ${VULNERABILITYCOUNT}
+              - **Security Hotspots**: ${SECURITYHOTSPOTCOUNT}
+              
+              ${{ env.Build == 'false' && 'Please resolve these issues before requesting another review.' || '' }}
+              EOF
+              )
+              
+              # Try to find existing comment by the bot
+              EXISTING_COMMENT_ID=$(gh pr view ${{ github.event.pull_request.number }} --comments --json comments \
+                | jq '.comments[] | select(.author.login == "github-actions[bot]") | select(.body | contains("SonarQube Scan")) | .id' \
+                | tail -n1)
+              
+              if [[ -n "$EXISTING_COMMENT_ID" ]]; then
+                # Update the existing comment
+                gh pr comment ${{ github.event.pull_request.number }} --edit "$EXISTING_COMMENT_ID" --body "$COMMENT_BODY"
+              else
+                # Create a new comment
+                gh pr comment ${{ github.event.pull_request.number }} --body "$COMMENT_BODY"
+              fi
       - name: Fail workflow if scan failed
         if: env.BuildResult == 'fail'
         run: exit 1
-
