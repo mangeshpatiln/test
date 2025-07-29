@@ -112,8 +112,23 @@ jobs:
               echo "GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
               gh --version
           
+              # Shell-safe evaluation of BuildResult
+              STATUS_ICON=":x: **SonarQube Scan Failed**"
+              RESOLUTION_NOTE="Please resolve these issues before requesting another review."
+          
+              if [ "$BuildResult" = "pass" ]; then
+                STATUS_ICON=":white_check_mark: **SonarQube Scan Passed**"
+                RESOLUTION_NOTE=""
+              fi
+          
+              # Fallback to zero if unset (defensive)
+              BLOCKERCOUNT=${BLOCKERCOUNT:-0}
+              BUGCOUNT=${BUGCOUNT:-0}
+              VULNERABILITYCOUNT=${VULNERABILITYCOUNT:-0}
+              SECURITYHOTSPOTCOUNT=${SECURITYHOTSPOTCOUNT:-0}
+          
               COMMENT_BODY=$(cat <<EOF
-          ${{ env.BuildResult == 'pass' && ':white_check_mark: **SonarQube Scan Passed**' || ':x: **SonarQube Scan Failed**' }}
+          $STATUS_ICON
           
           The scan reported the following issues:
           
@@ -122,19 +137,23 @@ jobs:
           - **Vulnerabilities**: ${VULNERABILITYCOUNT}
           - **Security Hotspots**: ${SECURITYHOTSPOTCOUNT}
           
-          ${{ env.BuildResult == 'fail' && 'Please resolve these issues before requesting another review.' || '' }}
+          $RESOLUTION_NOTE
           EOF
           )
           
+              # Update or post comment on the PR
               EXISTING_COMMENT_ID=$(gh pr view ${{ github.event.pull_request.number }} --comments --json comments \
                 | jq '.comments[] | select(.author.login == "github-actions[bot]") | select(.body | contains("SonarQube Scan")) | .id' \
                 | tail -n1)
           
               if [[ -n "$EXISTING_COMMENT_ID" ]]; then
+                echo "Updating existing SonarQube scan comment (ID: $EXISTING_COMMENT_ID)..."
                 gh pr comment ${{ github.event.pull_request.number }} --edit "$EXISTING_COMMENT_ID" --body "$COMMENT_BODY"
               else
+                echo "Creating new SonarQube scan comment..."
                 gh pr comment ${{ github.event.pull_request.number }} --body "$COMMENT_BODY"
               fi
+
           - name: Fail workflow if scan failed
             if: env.BuildResult == 'fail'
             run: exit 1
