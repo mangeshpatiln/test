@@ -124,7 +124,7 @@ jobs:
             
             ${{ env.BuildResult == 'fail' && 'Please resolve these issues before requesting another review.' || '' }}
             EOF
-            )
+          
             
                 EXISTING_COMMENT_ID=$(gh pr view ${{ github.event.pull_request.number }} --comments --json comments \
                   | jq '.comments[] | select(.author.login == "github-actions[bot]") | select(.body | contains("SonarQube Scan")) | .id' \
