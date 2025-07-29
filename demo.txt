@@ -1,2 +1,38 @@
-echo "This is i am trying to ssh 228"
-nooo
+// Vulnerable JavaScript Example for SonarQube Testing
+
+const express = require('express');
+const app = express();
+const port = 3000;
+
+const dbPassword = 'supersecret'; // Hardcoded credentials (Security Hotspot)
+
+// Middleware with unsanitized input
+app.use(express.urlencoded({ extended: true }));
+
+app.get('/', (req, res) => {
+    res.send('Welcome to the test app!');
+});
+
+// Cross-Site Scripting (XSS) Vulnerability
+app.get('/greet', (req, res) => {
+    const name = req.query.name;
+    res.send(`<h1>Hello, ${name}</h1>`); // No input sanitization
+});
+
+// SQL Injection (if using SQL, simulated here)
+app.get('/user', (req, res) => {
+    const userId = req.query.id;
+    const query = "SELECT * FROM users WHERE id = '" + userId + "'"; // Insecure SQL construction
+    console.log("Executing query: " + query); // Just a mock
+    res.send("Query executed: " + query);
+});
+
+// Unused variable
+let unusedVar = 42;
+
+// Debug code left in production
+console.log("Server is starting...");
+
+app.listen(port, () => {
+    console.log(`App listening on port ${port}`);
+});
